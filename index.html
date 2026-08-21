@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>近藤家｜買い物リスト</title>
+<style>
+
+:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:#171717;background:#f3f5f8}
+*{box-sizing:border-box} body{margin:0;padding:18px 14px 50px}
+.wrap{max-width:760px;margin:auto}.card{background:white;border-radius:22px;padding:18px;margin:0 0 16px}
+h1{font-size:30px;margin:4px 0 18px} h2{font-size:22px;margin:0 0 14px}
+label{font-weight:700;display:block;margin:12px 0 7px}
+input,select,button{width:100%;font-size:18px;border-radius:16px;padding:15px;border:1px solid #c9cdd3;background:white}
+button{font-weight:700;border:0;background:#3269df;color:white;margin-top:12px}
+button.gray{background:#e9eaed;color:#2371df}.danger{background:#fff0f0;color:#c62828;border:1px solid #f0bcbc}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;overflow:visible;padding-bottom:4px;min-width:0}
+.filters button{width:auto;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:break-word;padding:10px 15px;margin:0;background:#e9eaed;color:#333;flex:0 1 auto}
+.filters button.active{background:#3269df;color:#fff}
+.filters button.has-items{background:#fff1b8;color:#7a5200;border:2px solid #e6b800}
+.filters button.has-items.active{background:#3269df;color:#fff;border-color:#3269df}
+.filters button .count{display:inline-block;margin-left:4px;font-weight:800;vertical-align:middle;white-space:nowrap}
+.storeGroup{background:#fff;border-radius:20px;margin:14px 0;overflow:hidden}
+.storeTitle{font-size:22px;font-weight:800;padding:16px 18px;background:#eef3ff}
+.storeTitle{display:flex;align-items:center;justify-content:space-between;gap:10px}.storeTotal{font-size:18px;font-weight:800;white-space:nowrap}
+.item{display:flex;align-items:center;gap:12px;padding:15px 18px;border-top:1px solid #eee}
+.item input[type=checkbox]{width:26px;height:26px;flex:0 0 26px}
+.itemText{flex:1;font-size:18px}.itemText .small{font-size:18px!important;color:#444;margin-top:5px;line-height:1.35}.item.done .itemText{text-decoration:line-through;opacity:.45}
+.itemDelete{width:auto;margin:0;padding:8px 11px;background:#f1f1f1;color:#b42318;font-size:14px}
+.empty{background:white;border-radius:20px;padding:20px;font-size:18px}
+.storeManage{display:flex;gap:8px;margin:8px 0}.storeManage span{flex:1;padding:12px;background:#f4f4f4;border-radius:12px}
+.storeManage button{width:auto;margin:0;padding:10px 12px}
+.small{font-size:13px;color:#666;margin-top:8px}
+.settingsCard{padding:0;overflow:hidden}.settingsCard summary{cursor:pointer;padding:20px 18px;font-size:20px;font-weight:800;color:#2867df;list-style:none}.settingsCard summary::-webkit-details-marker{display:none}.settingsCard summary::after{content:"▼";float:right}.settingsCard details[open] summary::after{content:"▲"}.settingsBody{padding:0 18px 20px;border-top:1px solid #eee}.settingsHeading{margin-top:26px!important;padding-top:20px;border-top:1px solid #eee}
+.navtabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.navtabs button{margin:0;background:#e9eaed;color:#333}
+.navtabs button.active{background:#3269df;color:#fff}
+.navtabs button .count{display:inline-block;margin-left:4px;font-weight:800;background:#c62828;color:#fff;border-radius:10px;padding:1px 7px;font-size:12px}
+.navtabs button.active .count{background:#fff;color:#3269df}
+.page[hidden]{display:none!important}
+.orderRow{display:grid;grid-template-columns:90px 1fr 105px;gap:8px;align-items:end;margin:10px 0}
+.orderRow button{margin:0}
+.orderItems{margin-top:14px}
+.orderItem{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #eee}
+.orderItem button{width:auto;margin:0;padding:8px 11px;background:#f1f1f1;color:#b42318;font-size:14px}
+.preview{background:#fff;border:2px solid #222;border-radius:10px;padding:24px 20px;margin-top:14px;font-size:21px;line-height:1.75;white-space:pre-wrap}
+.previewTitle{text-align:center;font-size:25px;font-weight:800;margin-bottom:12px}
+.previewActions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.unitManage{display:flex;gap:8px;margin:8px 0}.unitManage span{flex:1;padding:12px;background:#f4f4f4;border-radius:12px}.unitManage button{width:auto;margin:0;padding:10px 12px}
+@media(max-width:520px){.orderRow{grid-template-columns:72px minmax(0,1fr) 92px}.preview{font-size:20px;padding:22px 16px}}
+.moveBtn{width:auto!important;margin:0!important;padding:9px 12px!important;background:#e9eaed!important;color:#2867df!important}.moveBtn:disabled{opacity:.3}.navtabs3{grid-template-columns:1fr 1fr 1fr}.navtabs3 button{font-size:15px;padding:12px 4px;min-width:0;white-space:normal;overflow-wrap:anywhere}
+.prepGroup{background:#fff;border-radius:20px;margin:14px 0;overflow:hidden}.prepTitle{font-size:22px;font-weight:800;padding:15px 18px;background:#eef3ff}.prepRow{display:grid;grid-template-columns:30px 1fr 82px;gap:10px;align-items:center;padding:14px;border-top:1px solid #eee}.prepRow input[type=checkbox]{width:27px;height:27px}.prepCount{padding:11px 5px!important;text-align:center}.manage{display:grid;grid-template-columns:1fr auto auto auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid #eee}.manage span{padding:10px;background:#f4f4f4;border-radius:12px}.manage button{width:auto;margin:0;padding:9px}.needEdit{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.needEdit input{padding:10px;font-size:16px}.prepDone{opacity:.48;background:#f5f5f5}.prepDone b{text-decoration:line-through}.prepQtyWrap{display:flex;align-items:center;gap:5px}.prepQtyUnit{font-size:15px;font-weight:700;white-space:nowrap}.prepQtyWrap .prepCount{min-width:58px}
+#printSheet{display:none}
+@media print{
+ @page{size:A4 portrait;margin:9mm}
+ body{background:#fff!important;padding:0!important}
+ .wrap{max-width:none!important}
+ .wrap>.navtabs,
+ #shoppingPage,
+ #vegetablePage,
+ #prepPage>*:not(#printSheet){display:none!important}
+ #prepPage{display:block!important;margin:0!important;padding:0!important}
+ #printSheet{display:block!important;color:#000;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+ #printSheet h1{text-align:center;font-size:20pt;margin:0 0 5mm}
+ #printSheet .printMeta{text-align:right;font-size:10pt;margin-bottom:3mm}
+ #printSheet .printPos{break-inside:avoid;margin:0 0 4mm}
+ #printSheet h2{font-size:13pt;margin:0;padding:2mm 2.5mm;background:#eee;border:1px solid #555}
+ #printSheet table{width:100%;border-collapse:collapse;table-layout:fixed}
+ #printSheet th,#printSheet td{border:1px solid #555;padding:1.7mm 2mm;font-size:10.5pt;line-height:1.2}
+ #printSheet th:nth-child(1),#printSheet td:nth-child(1){width:50%}
+ #printSheet th:nth-child(2),#printSheet td:nth-child(2){width:18%;text-align:center}
+ #printSheet th:nth-child(3),#printSheet td:nth-child(3){width:22%;text-align:center}
+ #printSheet th:nth-child(4),#printSheet td:nth-child(4){width:10%;text-align:center}
+}
+
+/* ===== 買い物シート チェック位置修正 ===== */
+.storeGroup .item{
+  display:flex;
+  align-items:center;
+}
+.storeGroup .item input[type="checkbox"]{
+  flex:0 0 auto;
+  margin:0 10px 0 0;
+  align-self:center;
+}
+.storeGroup .itemText{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  min-height:26px;
+}
+/* 買い物リストの数量・メモを商品名と同等に見やすく */
+.storeGroup .itemText .small{
+  font-size:18px !important;
+  line-height:1.4 !important;
+  color:#333 !important;
+  margin-top:4px !important;
+  font-weight:600 !important;
+}
+
+
+
+/* ===== 買い物：写真・価格・合計 ===== */
+.itemText[data-edit]{cursor:pointer}
+.itemProductLine{display:flex;align-items:center;gap:9px;min-width:0}
+.itemProductLine b{min-width:0;overflow-wrap:anywhere}
+.itemThumb{display:none!important}
+.itemPrice{margin-top:5px;font-size:16px;font-weight:800;color:#b45309}
+.itemQuantity{display:block!important;font-size:18px!important;line-height:1.4!important;margin-top:4px!important;font-weight:600!important;color:#333!important}
+.shoppingItemModal{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:12000;padding:18px;display:flex;align-items:center;justify-content:center}
+.shoppingItemModal[hidden]{display:none!important}
+.shoppingItemModalBox{width:min(520px,100%);max-height:calc(100dvh - 36px);overflow:auto;background:#fff;border-radius:22px;padding:18px}
+.shoppingItemModalHeader{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.shoppingItemModalHeader h2{margin:0;font-size:22px}
+.shoppingModalClose{width:46px!important;height:46px!important;padding:0!important;margin:0!important;background:#e9eaed!important;color:#333!important;font-size:30px!important;line-height:1}
+.shoppingPhotoPreviewWrap{margin:8px 0 14px;text-align:center}
+.shoppingPhotoPreviewWrap img{display:block;width:100%;max-height:300px;object-fit:contain;border-radius:14px;background:#f3f5f8;border:1px solid #ddd}
+.purchaseBox{margin:8px 0 14px;padding:12px;border:1px solid #e1e4e8;border-radius:14px;background:#f8fafc}.purchaseHint{font-size:13px;color:#666;margin:4px 0 8px}.purchaseMode{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:6px}.purchaseMode button{margin:0!important;padding:9px!important;font-size:14px!important;border-radius:9px!important}.purchaseMode button.active{background:#3269df!important;color:#fff!important}.purchaseMode button:not(.active){background:#e9edf3!important;color:#333!important}.purchaseCalcNote{grid-column:1 / -1;font-size:12px;color:#666}.purchaseRow{padding:10px;background:#fff;border:1px solid #e1e4e8;border-radius:12px}.purchaseField{min-width:0}.purchaseField label{display:block;font-size:12px;font-weight:700;color:#555;margin:0 0 4px}.purchaseRow input{width:100%!important;min-width:0!important;margin:0!important;padding:11px 10px!important;font-size:18px!important;font-weight:700}.purchaseQtyWrap{grid-column:1 / -1;display:flex;align-items:center;gap:8px}.purchaseQtyWrap .purchaseQtyLabel{font-size:12px;font-weight:700;color:#555;margin-right:auto}.purchaseQtyBtn{width:42px!important;height:42px!important;padding:0!important;margin:0!important;border-radius:10px!important;font-size:22px!important}.purchaseQtyValue{width:72px!important;text-align:center!important}.purchaseRow .purchaseRemove{width:42px!important;height:42px!important;padding:0!important;margin:0!important;grid-column:1 / -1;justify-self:end}.purchaseTotal{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid #ddd;font-size:17px}.purchaseTotal strong{font-size:22px}.shoppingModalActions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.shoppingModalActions button{margin:0}
+@media(max-width:520px){
+.shoppingItemModal{padding:10px}
+.shoppingItemModalBox{max-height:calc(100dvh - 20px);border-radius:18px;padding:14px}
+}
+
+</style>
+<style>\n
+/* ===== iPhone入力枠・単位はみ出し完全対策 ===== */
+.row > *, .orderRow > *, .orderItem > *, .manage > *, .prepRow > * {
+  min-width:0;
+  max-width:100%;
+}
+input, select, textarea, button {
+  max-width:100%;
+  min-width:0;
+}
+.prepRow{
+  grid-template-columns:28px minmax(0,1fr) minmax(78px,auto);
+}
+.prepQtyWrap{
+  min-width:0;
+  max-width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:3px;
+  padding:3px 5px;
+  border:1px solid #c9cdd3;
+  border-radius:12px;
+  background:#fff;
+  overflow:hidden;
+}
+.prepQtyWrap .prepCount{
+  flex:0 1 58px;
+  width:58px;
+  min-width:45px;
+  border:0!important;
+  background:transparent;
+  padding:8px 2px!important;
+}
+.prepQtyUnit{
+  flex:0 1 auto;
+  min-width:0;
+  max-width:100%;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  line-height:1.15;
+  text-align:left;
+}
+.manage{
+  min-width:0;
+}
+.manage span{
+  min-width:0;
+  overflow:hidden;
+}
+.manage span input{
+  min-width:0!important;
+  max-width:100%;
+}
+@media(max-width:520px){
+  body{padding-left:10px!important;padding-right:10px!important}
+  .card{padding:14px!important}
+  .prepRow{
+    grid-template-columns:28px minmax(0,1fr) minmax(76px,auto);
+    gap:7px;
+    padding:12px 10px;
+  }
+  .prepQtyWrap{font-size:14px}
+  .prepQtyWrap .prepCount{font-size:16px!important}
+  .manage{
+    grid-template-columns:minmax(0,1fr) auto auto auto;
+    gap:4px;
+  }
+  .manage button{padding:8px 7px!important;font-size:14px}
+  .needEdit{min-width:0}
+}
+\n</style>\n<style>\n
+.productRegPhotoPreview{margin:8px 0;text-align:center}.productRegPhotoPreview img{width:120px;height:90px;object-fit:cover;border-radius:10px;border:1px solid #ddd}
+.productManagePhoto{display:flex;align-items:center;gap:6px;min-width:0}.productManagePhoto img{width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid #ddd;flex:0 0 48px}.productManagePhoto .noPhoto{width:48px;height:48px;border-radius:8px;background:#f3f3f3;display:flex;align-items:center;justify-content:center;font-size:12px;color:#777;flex:0 0 48px}
+.productManagePhoto input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.photoIconButton{display:inline-flex!important;align-items:center;justify-content:center;width:34px!important;height:34px!important;min-width:34px!important;padding:0!important;margin:0!important;background:#eef3ff!important;color:#2867df!important;border:1px solid #c9d7ff!important;border-radius:9px!important;font-size:17px!important;line-height:1!important;cursor:pointer}.photoDeleteButton{display:inline-flex!important;align-items:center;justify-content:center;width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;margin:0 0 0 3px!important;background:#fff0f0!important;color:#c62828!important;border:1px solid #f0bcbc!important;border-radius:8px!important;font-size:15px!important;line-height:1!important;cursor:pointer}.shoppingTapIcon{width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;margin:0!important;background:transparent!important;color:#2867df!important;border:0!important;border-radius:50%!important;font-size:17px!important;line-height:1!important;cursor:pointer}.itemProductLine{display:flex;align-items:center;gap:6px;min-width:0}.itemProductName{flex:1;min-width:0}.itemProductName b{overflow-wrap:anywhere}.productRegUpload{display:flex;align-items:center;gap:8px}.productRegUpload input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.productRegUploadLabel{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid #c9d7ff;border-radius:9px;background:#eef3ff;color:#2867df;font-size:18px;cursor:pointer}
+@media(max-width:520px){#productManage .productManageRow{grid-template-columns:1fr!important}.productManagePhoto{margin-top:2px}}
+\n</style>\n<style>\n
+/* =========================================================
+   最終デザイン調整：見た目のみ変更
+   機能・HTML・JavaScriptの動作には変更を加えない
+   ========================================================= */
+
+/* 全体：明るい白ベース */
+html, body{
+  background:#ffffff !important;
+}
+body{
+  color:#172033 !important;
+}
+
+/* 上部4メニュー：白を基本に、選択中だけ色を付ける */
+.navtabs.navtabs4{
+  gap:10px !important;
+  margin-bottom:18px !important;
+}
+.navtabs.navtabs4 button{
+  background:#ffffff !important;
+  color:#25324a !important;
+  border:2px solid #e2e7ef !important;
+  box-shadow:0 3px 10px rgba(30,55,90,.08) !important;
+  transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,color .15s ease,transform .15s ease;
+}
+.navtabs.navtabs4 button:hover{
+  background:#f8fbff !important;
+  border-color:#b9c9e8 !important;
+}
+.navtabs.navtabs4 button:active{
+  transform:translateY(1px);
+}
+
+/* 選択中だけ色を変更。4項目とも同じデザインルールで統一 */
+.navtabs.navtabs4 #tabShopping.active{
+  background:#2f6fe4 !important;
+  border-color:#2f6fe4 !important;
+  color:#ffffff !important;
+  box-shadow:0 5px 14px rgba(47,111,228,.24) !important;
+}
+.navtabs.navtabs4 #tabVegetable.active{
+  background:#2aa052 !important;
+  border-color:#2aa052 !important;
+  color:#ffffff !important;
+  box-shadow:0 5px 14px rgba(42,160,82,.22) !important;
+}
+.navtabs.navtabs4 #tabPrep.active{
+  background:#ed8a19 !important;
+  border-color:#ed8a19 !important;
+  color:#ffffff !important;
+  box-shadow:0 5px 14px rgba(237,138,25,.23) !important;
+}
+.navtabs.navtabs4 #tabShift.active{
+  background:#7656c9 !important;
+  border-color:#7656c9 !important;
+  color:#ffffff !important;
+  box-shadow:0 5px 14px rgba(118,86,201,.22) !important;
+}
+
+/* 「表示する場所」：基本は白。選択中だけ青。
+   買い物がある場所はゴールドで分かるようにする。 */
+#shoppingPage #filters{
+  gap:9px !important;
+}
+#shoppingPage #filters button{
+  background:#ffffff !important;
+  color:#26344d !important;
+  border:2px solid #dfe5ed !important;
+  box-shadow:0 2px 7px rgba(30,55,90,.07) !important;
+  font-weight:800 !important;
+  transition:background .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease,transform .15s ease;
+}
+#shoppingPage #filters button:hover{
+  background:#f8fbff !important;
+  border-color:#b9c9e8 !important;
+}
+
+/* 通常の選択中 */
+#shoppingPage #filters button.active{
+  background:#2f6fe4 !important;
+  color:#ffffff !important;
+  border-color:#2f6fe4 !important;
+  box-shadow:0 4px 12px rgba(47,111,228,.23) !important;
+}
+
+/* 買い物が存在する場所＝ゴールド */
+#shoppingPage #filters button.has-items{
+  background:#fff8df !important;
+  color:#805b00 !important;
+  border:2px solid #dcae32 !important;
+  box-shadow:0 3px 9px rgba(196,145,20,.13) !important;
+}
+
+/* 「買い物あり」かつ現在選択中：ゴールドを維持して、選択状態も明確に */
+#shoppingPage #filters button.has-items.active{
+  background:#d6a82b !important;
+  color:#ffffff !important;
+  border-color:#b98b16 !important;
+  box-shadow:0 5px 13px rgba(185,139,22,.28) !important;
+}
+
+/* 全体のカードを白く、境界だけ軽くして統一感を出す */
+.card{
+  background:#ffffff !important;
+  border:1px solid #e5eaf1;
+  box-shadow:0 3px 14px rgba(28,48,78,.06);
+}
+
+/* セクション見出しの文字を読みやすく */
+.card h2,
+label{
+  color:#172033;
+}
+
+/* 選択系の入力欄も白ベースで統一 */
+input,select,textarea{
+  background:#ffffff !important;
+  color:#172033 !important;
+}
+
+/* スマホでもボタン文字が潰れないように */
+.navtabs.navtabs4 button,
+#shoppingPage #filters button{
+  -webkit-text-fill-color:currentColor !important;
+  text-shadow:none !important;
+}
+\n</style>\n<style>\n
+#shoppingPage .storeQuickAddButton{
+  width:100%;margin:0 0 10px;padding:14px 16px;border:0;border-radius:14px;
+  background:#e9edf3;color:#2f6fe4;font-weight:800;font-size:17px;
+}
+#shoppingPage .storeQuickAddButton:active{transform:scale(.99)}
+#shoppingPage .selectedStoreHint{color:#2f6fe4}
+\n</style>\n<style>\n
+/* 背景だけを薄く色付け。既存の機能・デザイン・JavaScriptは変更しない */
+html{
+  background:#edf3f8 !important;
+}
+body{
+  background:
+    linear-gradient(180deg,#eef4f9 0%,#e9f0f6 100%) !important;
+}
+\n</style>\n
+</head>
+<body>
+<div class="wrap">
+<div class="page" id="shoppingPage">
+<h1>🛒 買い物リスト</h1>
+<div class="card">
+<h2>表示する場所</h2><div class="filters" id="filters"></div>
+</div>
+<div id="list"></div>
+<div class="card row">
+<button class="gray" id="deleteDone">購入済みを削除</button>
+<button class="gray" id="uncheckAll">チェックを全て外す</button>
+</div>
+<div class="card" id="shoppingAddCard">
+<h2 id="shoppingAddTitle">買う物を追加</h2>
+<div class="small" id="selectedStoreHint" style="display:none;margin:-4px 0 10px;font-weight:800"></div>
+<div id="shoppingAddStorePicker"><label>買う場所</label><select id="storeSelect"></select></div>
+<label>商品</label><input autocomplete="off" id="productSearch" placeholder="商品名・ふりがなで検索"/>
+<div id="productSuggestions" style="display:none;background:#fff;border:1px solid #ccc;border-radius:10px;margin:-4px 0 8px;padding:4px;max-height:220px;overflow:auto"></div>
+<select id="productSelect"></select>
+<label>数量</label><select id="itemQty"></select>
+<label>自由入力</label><input id="freeProduct" placeholder="商品リストにない物を入力"/>
+<label>メモ</label><input id="memo" placeholder="例：大サイズ / 特売"/>
+<button id="addItem">＋ 買う物に追加</button>
+</div>
+<div class="card settingsCard"><details><summary>⚙️ 買う場所・商品の登録・削除</summary><div class="settingsBody">
+<h2>買う場所の管理</h2>
+<label>新しい買う場所</label><input id="newStore" placeholder="例：魚屋"/>
+<button id="addStore">＋ 買う場所を追加</button><div id="storeManage"></div>
+<h2 class="settingsHeading">商品の管理</h2>
+<label>商品を登録する場所</label><select id="regStore"></select>
+<label>新しい商品</label><input id="newProduct" placeholder="例：玉子"/><label>ふりがな（検索用）</label><input id="newProductKana" placeholder="例：たまご"/><label>価格の種類</label><select id="newProductPriceMode"><option value="pack">商品単価</option><option value="gram">g単価</option></select><label>価格</label><input id="newProductPrice" inputmode="decimal" min="0" placeholder="例：175" step="0.01" type="number"/><label>商品写真</label><div class="productRegUpload"><label aria-label="写真を選択" class="productRegUploadLabel" for="newProductPhoto" title="写真を選択">📷</label><input accept="image/*,.heic,.heif,.jpg,.jpeg,.png,.webp" id="newProductPhoto" type="file"/><span class="small" style="margin:0">写真を選択</span></div><div class="productRegPhotoPreview" hidden="" id="newProductPhotoPreview"><img alt="商品写真" id="newProductPhotoImg"/></div><div class="small">登録した価格・写真は、買い物リストにも自動反映されます。</div>
+<button id="addProduct">＋ 商品を登録</button><div id="productManage"></div>
+<div class="small">買う場所を削除すると、その場所に登録した商品も削除します。すでに買い物リストへ追加した品は残ります。</div>
+</div></details></div>
+</div>
+<div class="shoppingItemModal" hidden="" id="shoppingItemModal">
+<div class="shoppingItemModalBox">
+<div class="shoppingItemModalHeader">
+<h2 id="shoppingModalTitle">商品</h2>
+<button class="shoppingModalClose" id="shoppingModalClose" type="button">×</button>
+</div>
+<div class="shoppingPhotoPreviewWrap" hidden="" id="shoppingPhotoPreviewWrap">
+<img alt="商品写真" id="shoppingPhotoPreview"/>
+</div>
+<label>商品写真</label>
+<div class="productRegUpload"><label aria-label="写真を選択" class="productRegUploadLabel" for="shoppingPhotoInput" title="写真を選択">📷</label><input accept="image/*,.heic,.heif,.jpg,.jpeg,.png,.webp" id="shoppingPhotoInput" type="file"/><span class="small" style="margin:0">写真・ファイルから選択</span></div>
+<div class="purchaseBox">
+<label>今回の購入内容</label>
+<div class="purchaseHint">今回の買い方を選んで入力してください。<b>gで計算</b>を選んだ時だけ重さ（g）を入力します。<b>商品単価</b>は商品単価×個数で計算します。</div>
+<div id="purchaseRows"></div>
+<button class="gray" id="addPurchaseRow" style="margin-top:8px" type="button">＋ 購入内容を追加</button>
+<div class="purchaseTotal"><span>今回合計</span><strong id="purchaseTotalValue">¥0</strong></div>
+<button class="gray" id="saveMasterUnitPrice" style="margin-top:8px" type="button">この単価を商品マスターに保存</button>
+<div class="small">※ 特売など今回だけの価格は保存せず、通常の基準単価として残したい時だけ押してください。</div>
+</div>
+<label>商品名</label>
+<input id="shoppingNameInput" type="text"/>
+<label>数量・メモ</label>
+<input id="shoppingMemoInput" placeholder="例：2袋 / 大サイズ" type="text"/>
+<div class="shoppingModalActions">
+<button class="gray" id="shoppingPhotoDelete" type="button">写真を削除</button>
+<button id="shoppingItemSave" type="button">保存</button>
+</div>
+</div>
+</div>
+</div>
+<script type="module">
+
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {getDatabase,ref,onValue,push,remove,update} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+// ===== 新しいFirebase設定 =====
+// 新しいFirebaseプロジェクトを作成したら、この3項目だけ差し替えます。
+// 現在は動作確認用に、元のFirebase設定を仮に入れています。
+const firebaseConfig = {
+  apiKey: "AIzaSyA_vMCxwIC-0meq91ku_Jq60ArT6YEYutQ",
+  authDomain: "kondo-fcbf8.firebaseapp.com",
+  databaseURL: "https://kondo-fcbf8-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "kondo-fcbf8",
+  storageBucket: "kondo-fcbf8.firebasestorage.app",
+  messagingSenderId: "234082724756",
+  appId: "1:234082724756:web:22f2a1fef8513fa0c7bd81"
+};
+const app=initializeApp(firebaseConfig), db=getDatabase(app);
+const storesRef=ref(db,"stores"), productsRef=ref(db,"products"), itemsRef=ref(db,"items");
+
+let stores={},products={},items={},filter="ALL";
+const $=id=>document.getElementById(id);
+function vals(o){return Object.entries(o||{})}
+function storeName(id){return stores[id]?.name||itemsStoreName(id)||"その他"}
+function findProductByItem(x){
+ if(!x||!x.storeId)return null;
+ if(x.productId && products[x.storeId]?.[x.productId]) return {id:x.productId,p:products[x.storeId][x.productId]};
+ const found=vals(products[x.storeId]||{}).find(([,p])=>(p.name||"").trim()===(x.name||"").trim());
+ return found?{id:found[0],p:found[1]}:null;
+}
+function productMasterForItem(x){const found=findProductByItem(x);return found?.p||{};}
+function itemsStoreName(id){for(const [,x] of vals(items))if(x.storeId===id&&x.storeName)return x.storeName;return ""}
+function renderSelectors(){
+ const opts=vals(stores).sort((a,b)=>(a[1].name||"").localeCompare(b[1].name||"ja")).map(([id,s])=>`<option value="${id}">${esc(s.name)}</option>`).join("");
+ const keep=$("storeSelect").value, keep2=$("regStore").value;
+ $("storeSelect").innerHTML=opts;$("regStore").innerHTML=opts;
+ if(stores[keep])$("storeSelect").value=keep;if(stores[keep2])$("regStore").value=keep2;
+ renderProducts();
+}
+function normalizeProductSearch(s){
+ const v=String(s??"").trim().toLowerCase();
+ return v.replace(/[ァ-ヶ]/g,ch=>String.fromCharCode(ch.charCodeAt(0)-0x60))
+         .replace(/[　 ]/g,"");
+}
+function renderProducts(){
+ const sid=$("storeSelect").value;
+ const q=normalizeProductSearch($("productSearch")?.value||"");
+ const all=vals(products[sid]||{}).sort((a,b)=>(a[1].name||"").localeCompare(b[1].name||"ja"));
+ const ps=q?all.filter(([,p])=>{
+   const name=normalizeProductSearch(p.name);
+   const kana=normalizeProductSearch(p.kana||p.furigana||p.reading||"");
+   return name.includes(q)||kana.includes(q);
+ }):all;
+
+ $("productSelect").innerHTML=`<option value="">${q ? "検索結果を選択" : "商品を選択"}</option>`+
+   ps.map(([id,p])=>`<option value="${id}">${esc(p.name)}</option>`).join("");
+
+ const box=$("productSuggestions");
+ if(box){
+   if(!q || !ps.length){
+     box.innerHTML="";
+     box.style.display="none";
+   }else{
+     box.innerHTML=ps.slice(0,12).map(([id,p])=>{
+       const kana=p.kana||p.furigana||p.reading||"";
+       return `<button type="button" data-suggest-id="${esc(id)}" style="display:block;width:100%;text-align:left;background:#fff;color:#222;border:0;border-bottom:1px solid #eee;padding:11px 10px;margin:0;font-size:16px">
+         <b>${esc(p.name)}</b>${kana?`<span style="font-size:13px;color:#777;margin-left:8px">${esc(kana)}</span>`:""}
+       </button>`;
+     }).join("");
+     box.style.display="block";
+     box.querySelectorAll("[data-suggest-id]").forEach(btn=>{
+       btn.onclick=()=>{
+         $("productSelect").value=btn.dataset.suggestId;
+         $("productSearch").value=btn.querySelector("b").textContent;
+         box.style.display="none";
+       };
+     });
+   }
+ }
+ renderProductManage();
+}
+
+function renderStoreManage(){
+ $("storeManage").innerHTML=vals(stores).sort((a,b)=>(a[1].name||"").localeCompare(b[1].name||"ja")).map(([id,s])=>`<div class="storeManage"><span>${esc(s.name)}</span><button class="danger" data-delstore="${id}">削除</button></div>`).join("");
+ document.querySelectorAll("[data-delstore]").forEach(b=>b.onclick=async()=>{
+   const id=b.dataset.delstore,name=stores[id]?.name||"";
+   if(confirm(`「${name}」を削除しますか？\\n登録商品も削除されます。\\n買い物リストの品は残ります。`)){
+     await remove(ref(db,"stores/"+id)); await remove(ref(db,"products/"+id));
+   }
+ });
+}
+function renderProductManage(){
+ const sid=$("regStore").value;
+ const list=vals(products[sid]||{});
+ $("productManage").innerHTML=list.map(([id,p])=>{
+   const photo=p.photo||"";
+   const price=Number(p.price||0);
+   return `<div class="storeManage productManageRow" style="display:grid;grid-template-columns:1fr 1fr 110px 1.2fr auto;gap:6px;align-items:center;margin:10px 0">
+    <input type="text" value="${esc(p.name||"")}" data-pname="${id}" style="min-width:0;padding:9px;border:1px solid #ddd;border-radius:9px">
+    <input type="text" value="${esc(p.kana||"")}" placeholder="ふりがな" data-pkana="${id}" style="min-width:0;padding:9px;border:1px solid #ddd;border-radius:9px">
+    <div><select data-pmode="${id}" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:9px"><option value="pack" ${p.priceMode!=="gram"?"selected":""}>商品単価</option><option value="gram" ${p.priceMode==="gram"?"selected":""}>g単価</option></select><input type="number" min="0" step="0.01" inputmode="decimal" value="${price||""}" placeholder="価格" data-pprice="${id}" style="min-width:0;width:100%;padding:9px;border:1px solid #ddd;border-radius:9px;margin-top:4px"></div>
+    <div class="productManagePhoto">${photo?`<img src="${esc(photo)}" alt="">`:`<div class="noPhoto">写真なし</div>`}<label class="photoIconButton" for="pphoto-${esc(id)}" title="写真を変更" aria-label="写真を変更">📷</label>${photo?`<button type="button" class="photoDeleteButton" data-delphoto="${esc(id)}" title="写真を削除" aria-label="写真を削除">🗑️</button>`:""}<input id="pphoto-${esc(id)}" type="file" accept="image/*,.heic,.heif,.jpg,.jpeg,.png,.webp" data-pphoto="${id}"></div>
+    <button class="danger" data-delproduct="${id}">削除</button></div>`;
+ }).join("");
+ document.querySelectorAll("[data-delproduct]").forEach(b=>b.onclick=()=>remove(ref(db,`products/${sid}/${b.dataset.delproduct}`)));
+ document.querySelectorAll("[data-pname]").forEach(i=>i.onchange=()=>{const v=i.value.trim();if(v)update(ref(db,`products/${sid}/${i.dataset.pname}`),{name:v})});
+ document.querySelectorAll("[data-pkana]").forEach(i=>i.onchange=()=>update(ref(db,`products/${sid}/${i.dataset.pkana}`),{kana:i.value.trim()}));
+ document.querySelectorAll("[data-pprice]").forEach(i=>i.onchange=()=>update(ref(db,`products/${sid}/${i.dataset.pprice}`),{price:Math.max(0,Number(i.value)||0)}));
+document.querySelectorAll("[data-pmode]").forEach(i=>i.onchange=()=>update(ref(db,`products/${sid}/${i.dataset.pmode}`),{priceMode:i.value}));
+ document.querySelectorAll("[data-pphoto]").forEach(i=>i.onchange=async()=>{
+   const file=i.files?.[0]; if(!file)return;
+   try{const photo=await resizeShoppingPhoto(file); await update(ref(db,`products/${sid}/${i.dataset.pphoto}`),{photo}); renderProductManage();}
+   catch(err){console.error(err);alert("写真の保存に失敗しました。");}
+ });
+ document.querySelectorAll("[data-delphoto]").forEach(b=>b.onclick=async()=>{
+   if(!confirm("登録した写真を削除しますか？"))return;
+   try{
+     await update(ref(db,`products/${sid}/${b.dataset.delphoto}`),{photo:null});
+     renderProductManage();
+   }catch(err){console.error(err);alert("写真の削除に失敗しました。");}
+ });
+}
+function updateShoppingAddView(){
+ const card=$("shoppingAddCard"),title=$("shoppingAddTitle"),picker=$("shoppingAddStorePicker"),hint=$("selectedStoreHint");
+ if(!card||!title||!picker||!hint)return;
+ if(filter!=="ALL" && stores[filter]){
+   title.textContent=`＋ ${stores[filter].name} に買う物を追加`;
+   picker.style.display="none";
+   hint.style.display="block";
+   hint.className="small selectedStoreHint";
+   hint.textContent=`買う場所：${stores[filter].name}`;
+   $("storeSelect").value=filter;
+ }else{
+   title.textContent="買う物を追加";
+   picker.style.display="block";
+   hint.style.display="none";
+ }
+}
+function openShoppingStore(id){
+ filter=id;
+ if(stores[id])$("storeSelect").value=id;
+ $("productSearch").value="";
+ renderProducts();
+ renderList();
+ renderFilters();
+ updateShoppingAddView();
+ const card=$("shoppingAddCard");
+ if(card)requestAnimationFrame(()=>card.scrollIntoView({behavior:"smooth",block:"start"}));
+}
+function renderFilters(){
+ const counts={};
+ // タグの数字は「登録商品数」ではなく、現在まだ買う必要がある未購入の買い物数を表示
+ vals(items).forEach(([,x])=>{
+   if(x.done)return;
+   if(x.storeId)counts[x.storeId]=(counts[x.storeId]||0)+1;
+ });
+ const used=new Set(vals(items).map(([,x])=>x.storeId).filter(Boolean));
+ const ids=[...new Set([...Object.keys(stores),...used])];
+ const total=vals(items).filter(([,x])=>!x.done).length;
+ $("filters").innerHTML=`<button data-f="ALL" class="${filter==="ALL"?"active":""} ${total?"has-items":""}">全部${total?` <span class="count">${total}</span>`:""}</button>`+
+ ids.map(id=>`<button data-f="${id}" class="${filter===id?"active":""} ${counts[id]?"has-items":""}">${esc(storeName(id))}${counts[id]?` <span class="count">${counts[id]}</span>`:""}</button>`).join("");
+ document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{
+   const id=b.dataset.f;
+   // 買う場所タグは「表示の切り替え」だけ。追加画面へは移動しない。
+   filter=id;
+   if(id!=="ALL" && stores[id])$("storeSelect").value=id;
+   renderProducts();
+   renderList();
+   renderFilters();
+   updateShoppingAddView();
+ });
+ updateShoppingAddView();
+}
+
+let editingItemId=null;
+let shoppingModalItemId=null;
+let shoppingPendingPhoto=null;
+let shoppingPurchases=[];
+
+
+function yen(v){
+const n=Number(v||0);
+return "¥"+Math.round(n).toLocaleString("ja-JP");
+}
+
+function renderShoppingTotals(){}
+function renderStoreQuickAddButton(){
+ const list=$("list");
+ if(!list)return;
+ const old=$("storeQuickAddButton"); if(old)old.remove();
+ if(filter==="ALL"||!stores[filter])return;
+ const btn=document.createElement("button");
+ btn.type="button";btn.id="storeQuickAddButton";btn.className="storeQuickAddButton";
+ btn.textContent=`＋ ${stores[filter].name} に買う物を追加`;
+ btn.onclick=()=>{const card=$("shoppingAddCard");if(card)card.scrollIntoView({behavior:"smooth",block:"start"});};
+ list.parentNode.insertBefore(btn,list);
+}
+
+
+function renderList(){
+const arr=vals(items).map(([id,x])=>({id,...x})).filter(x=>filter==="ALL"||x.storeId===filter);
+if(!arr.length){$("list").innerHTML='<div class="empty">買う物はまだありません。</div>';renderStoreQuickAddButton();renderShoppingTotals();return}
+const groups={};arr.forEach(x=>{const k=x.storeId||"OTHER";if(!groups[k])groups[k]=[];groups[k].push(x);});
+$("list").innerHTML=Object.entries(groups).map(([sid,a])=>{
+const storeTotal=a.reduce((sum,x)=>sum+Number(x.price||0),0);
+return `<section class="storeGroup"><div class="storeTitle"><span>${esc(a[0].storeName||storeName(sid))}</span><span class="storeTotal">買物合計 ${yen(storeTotal)}</span></div>${a.map(x=>{
+const price=Number(x.price||0);
+const photo=x.photo||"";
+const purchaseQty=Array.isArray(x.purchaseDetails)&&x.purchaseDetails.length
+  ? x.purchaseDetails.reduce((sum,r)=>sum+Math.max(0,Number(r.qty)||0),0)
+  : Math.max(0,Number(x.quantity)||0);
+const qtyText=purchaseQty>0 ? `数量 ${purchaseQty}` : (x.memo||"");
+if(editingItemId===x.id){
+return `<div class="item"><input type="checkbox" ${x.done?"checked":""} data-check="${x.id}"><div class="itemText" style="display:block"><input type="text" value="${esc(x.name)}" data-editname="${x.id}" style="width:100%;margin-bottom:6px;padding:8px;border-radius:8px;border:1px solid #ccc;font-size:16px"><input type="text" value="${esc(x.memo||"")}" placeholder="数量・メモ" data-editmemo="${x.id}" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;font-size:16px"></div><button class="itemDelete" data-editsave="${x.id}" style="background:#3269df;color:#fff">保存</button></div>`;
+}
+return `<div class="item ${x.done?"done":""}"><input type="checkbox" ${x.done?"checked":""} data-check="${x.id}"><div class="itemText"><div class="itemProductLine"><span class="itemProductName"><b>${esc(x.name)}</b></span><button type="button" class="shoppingTapIcon" data-edit="${x.id}" title="写真・価格を登録・編集" aria-label="写真・価格を登録・編集">🔍</button></div>${qtyText?`<div class="small itemQuantity">${esc(qtyText)}</div>`:""}${price>0?`<div class="itemPrice">${yen(price)}</div>`:""}</div><button class="itemDelete" data-delitem="${x.id}">削除</button></div>`;
+}).join("")}</section>`;
+}).join("");
+document.querySelectorAll("[data-check]").forEach(c=>c.onchange=()=>update(ref(db,"items/"+c.dataset.check),{done:c.checked}));
+document.querySelectorAll("[data-delitem]").forEach(b=>b.onclick=()=>remove(ref(db,"items/"+b.dataset.delitem)));
+document.querySelectorAll("[data-edit]").forEach(d=>d.onclick=()=>openShoppingItemModal(d.dataset.edit));
+document.querySelectorAll("[data-editsave]").forEach(b=>b.onclick=async()=>{
+const id=b.dataset.editsave;
+const nameInput=document.querySelector(`[data-editname="${id}"]`),memoInput=document.querySelector(`[data-editmemo="${id}"]`);
+const name=nameInput.value.trim(),memo=memoInput.value.trim();
+if(!name)return alert("商品名を入力してください");
+await update(ref(db,"items/"+id),{name,memo});
+editingItemId=null;
+renderList();
+});
+renderStoreQuickAddButton();
+renderShoppingTotals();
+}
+
+function openShoppingItemModal(id){
+const x=items[id];
+if(!x)return;
+shoppingModalItemId=id;
+const master=productMasterForItem(x);
+shoppingPendingPhoto=x.photo||master.photo||null;
+const defaultMode=master.priceMode||x.priceMode||"pack";
+if(Array.isArray(x.purchaseDetails)&&x.purchaseDetails.length){
+ shoppingPurchases=x.purchaseDetails.map(r=>{
+   const mode=r.mode||defaultMode;
+   const legacy=r.unitPrice??r.packPrice??"";
+   return {mode,grams:r.grams??"",gramPrice:r.gramPrice??(mode==="gram"?legacy:""),packPrice:r.packPrice??(mode==="pack"?legacy:""),qty:r.qty??1};
+ });
+}else{
+ const masterPrice=master.price??x.price??"";
+ shoppingPurchases=[{mode:defaultMode,grams:"",gramPrice:defaultMode==="gram"?masterPrice:"",packPrice:defaultMode==="pack"?masterPrice:"",qty:Math.max(1,Number(x.quantity)||1)}];
+}
+$("shoppingModalTitle").textContent=x.name||"商品";
+$("shoppingNameInput").value=x.name||"";
+$("shoppingMemoInput").value=x.memo||"";
+$("shoppingPhotoInput").value="";
+renderShoppingPhotoPreview(shoppingPendingPhoto);
+renderPurchaseRows();
+$("shoppingItemModal").hidden=false;
+document.body.style.overflow="hidden";
+}
+function renderPurchaseRows(){
+ const box=$("purchaseRows"); if(!box)return;
+ box.innerHTML=shoppingPurchases.map((r,i)=>{
+   const mode=r.mode||"pack";
+   const unitLabel=mode==="gram"?"g単価（円/g）":"商品単価（円）";
+   const currentPrice=mode==="gram"?(r.gramPrice??""):(r.packPrice??"");
+   const pricePlaceholder=mode==="gram"?"例：1.75":"例：175";
+   return `<div class="purchaseRow">
+    <div class="purchaseMode"><button type="button" class="${mode==="gram"?"active":""}" data-pmode="gram" data-pi="${i}">⚖️ gで計算</button><button type="button" class="${mode==="pack"?"active":""}" data-pmode="pack" data-pi="${i}">💰 商品単価</button></div>
+    ${mode==="gram"?`<div class="purchaseField"><label>重さ（g）</label><input type="number" min="0" step="0.01" inputmode="decimal" enterkeyhint="next" placeholder="例：235" value="${esc(r.grams)}" data-pg="${i}"></div>`:""}
+    <div class="purchaseField"><label>${unitLabel}</label><input type="number" min="0" step="0.01" inputmode="decimal" enterkeyhint="done" placeholder="${pricePlaceholder}" value="${esc(currentPrice)}" data-pp="${i}"></div>
+    <div class="purchaseQtyWrap"><span class="purchaseQtyLabel">個数</span><button type="button" class="gray purchaseQtyBtn" data-qminus="${i}">−</button><input class="purchaseQtyValue" type="number" min="1" step="1" inputmode="numeric" value="${esc(r.qty||1)}" data-pq="${i}"><button type="button" class="purchaseQtyBtn" data-qplus="${i}">＋</button><button type="button" class="gray purchaseRemove" data-pr="${i}" title="この購入内容を削除">🗑️</button></div>
+    <div class="purchaseCalcNote">${mode==="gram"?"計算：重さ × g単価 × 個数":"計算：商品単価 × 個数"}</div>
+   </div>`;
+ }).join("");
+ box.querySelectorAll("[data-pmode]").forEach(e=>e.onclick=()=>{
+   const r=shoppingPurchases[+e.dataset.pi];
+   r.mode=e.dataset.pmode;
+   renderPurchaseRows();
+ });
+ box.querySelectorAll("[data-pg]").forEach(e=>e.oninput=()=>{shoppingPurchases[+e.dataset.pg].grams=e.value;updatePurchaseTotal()});
+ box.querySelectorAll("[data-pp]").forEach(e=>e.oninput=()=>{
+   const r=shoppingPurchases[+e.dataset.pp];
+   if(r.mode==="gram") r.gramPrice=e.value; else r.packPrice=e.value;
+   updatePurchaseTotal();
+ });
+ box.querySelectorAll("[data-pq]").forEach(e=>e.oninput=()=>{shoppingPurchases[+e.dataset.pq].qty=Math.max(1,Number(e.value)||1);e.value=shoppingPurchases[+e.dataset.pq].qty;updatePurchaseTotal()});
+ box.querySelectorAll("[data-qminus]").forEach(e=>e.onclick=()=>{const i=+e.dataset.qminus;shoppingPurchases[i].qty=Math.max(1,(Number(shoppingPurchases[i].qty)||1)-1);renderPurchaseRows()});
+ box.querySelectorAll("[data-qplus]").forEach(e=>e.onclick=()=>{const i=+e.dataset.qplus;shoppingPurchases[i].qty=(Number(shoppingPurchases[i].qty)||1)+1;renderPurchaseRows()});
+ box.querySelectorAll("[data-pr]").forEach(e=>e.onclick=()=>{if(shoppingPurchases.length===1)shoppingPurchases[0]={mode:"pack",grams:"",gramPrice:"",packPrice:"",qty:1};else shoppingPurchases.splice(+e.dataset.pr,1);renderPurchaseRows()});
+ updatePurchaseTotal();
+}
+function updatePurchaseTotal(){const total=shoppingPurchases.reduce((sum,r)=>{const qty=Math.max(1,Number(r.qty)||1),p=Math.max(0,Number(r.mode==="gram"?r.gramPrice:r.packPrice)||0),g=Math.max(0,Number(r.grams)||0);return sum+(r.mode==="gram"?g*p*qty:p*qty)},0);$("purchaseTotalValue").textContent=yen(total);return total;}
+
+function closeShoppingItemModal(){
+$("shoppingItemModal").hidden=true;
+document.body.style.overflow="";
+shoppingModalItemId=null;
+shoppingPendingPhoto=null;
+shoppingPurchases=[];
+}
+
+function renderShoppingPhotoPreview(src){
+const wrap=$("shoppingPhotoPreviewWrap"),img=$("shoppingPhotoPreview");
+if(src){img.src=src;wrap.hidden=false;}else{img.removeAttribute("src");wrap.hidden=true;}
+}
+
+async function resizeShoppingPhoto(file){
+const dataUrl=await new Promise((resolve,reject)=>{
+const reader=new FileReader();
+reader.onload=()=>resolve(reader.result);
+reader.onerror=reject;
+reader.readAsDataURL(file);
+});
+const img=await new Promise((resolve,reject)=>{
+const im=new Image();
+im.onload=()=>resolve(im);
+im.onerror=reject;
+im.src=dataUrl;
+});
+const max=900;
+const scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+const canvas=document.createElement("canvas");
+canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+return canvas.toDataURL("image/jpeg",0.72);
+}
+
+$("shoppingModalClose").onclick=closeShoppingItemModal;
+$("shoppingItemModal").addEventListener("click",e=>{if(e.target===$("shoppingItemModal"))closeShoppingItemModal();});
+$("shoppingPhotoInput").addEventListener("change",async e=>{
+const file=e.target.files?.[0];
+if(!file)return;
+try{
+shoppingPendingPhoto=await resizeShoppingPhoto(file);
+renderShoppingPhotoPreview(shoppingPendingPhoto);
+}catch(err){
+console.error(err);
+alert("写真の読み込みに失敗しました。");
+}
+});
+$("addPurchaseRow").onclick=()=>{shoppingPurchases.push({mode:shoppingPurchases[0]?.mode||"pack",grams:"",gramPrice:"",packPrice:"",qty:1});renderPurchaseRows()};
+
+$("shoppingPhotoDelete").onclick=()=>{
+shoppingPendingPhoto=null;
+$("shoppingPhotoInput").value="";
+renderShoppingPhotoPreview(null);
+};
+$("saveMasterUnitPrice").onclick=async()=>{
+ const id=shoppingModalItemId;
+ const x=id?items[id]:null;
+ if(!x)return;
+ const name=$("shoppingNameInput").value.trim();
+ const found=findProductByItem({...x,name});
+ if(!found)return alert("商品マスターに登録された商品ではありません。");
+ const r=shoppingPurchases[0];
+ if(!r)return alert("購入内容がありません。");
+ const mode=r.mode||"pack";
+ const unitPrice=mode==="gram"?Number(r.gramPrice)||0:Number(r.packPrice)||0;
+ if(unitPrice<=0)return alert("保存する単価を入力してください。");
+ const total=updatePurchaseTotal();
+ const qty=shoppingPurchases.reduce((sum,p)=>sum+Math.max(1,Number(p.qty)||1),0);
+ if(!confirm(`商品マスターの${mode==="gram"?"g単価":"商品単価"}を ${unitPrice} に更新し、今回の買物にも反映しますか？`))return;
+ try{
+   await update(ref(db,`products/${x.storeId}/${found.id}`),{price:unitPrice,priceMode:mode});
+   await update(ref(db,"items/"+id),{price:total,quantity:qty,priceMode:mode,unitPrice});
+   alert("商品単価を保存し、買物リストにも反映しました。");
+   closeShoppingItemModal();
+ }catch(err){
+   console.error(err);
+   alert("単価の保存に失敗しました。");
+ }
+};
+$("shoppingItemSave").onclick=async()=>{
+const id=shoppingModalItemId;
+if(!id||!items[id])return;
+const name=$("shoppingNameInput").value.trim();
+const memo=$("shoppingMemoInput").value.trim();
+const price=updatePurchaseTotal();
+if(!name)return alert("商品名を入力してください");
+try{
+ const current=items[id]||{};
+ const found=findProductByItem({...current,name});
+ const purchaseDetails=shoppingPurchases.filter(r=>Number(r.mode==="gram"?r.gramPrice:r.packPrice)>0).map(r=>{
+   const mode=r.mode||"pack";
+   const gp=Math.max(0,Number(r.gramPrice)||0);
+   const pp=Math.max(0,Number(r.packPrice)||0);
+   return {mode,grams:Math.max(0,Number(r.grams)||0),gramPrice:gp,packPrice:pp,unitPrice:mode==="gram"?gp:pp,qty:Math.max(1,Number(r.qty)||1)};
+ });
+ const totalQty=purchaseDetails.reduce((sum,r)=>sum+Math.max(1,Number(r.qty)||1),0);
+ const first=shoppingPurchases[0]||{};
+ const firstMode=first.mode||"pack";
+ const firstUnitPrice=firstMode==="gram"?Math.max(0,Number(first.gramPrice)||0):Math.max(0,Number(first.packPrice)||0);
+ const itemPatch={name,memo,price,quantity:totalQty,photo:shoppingPendingPhoto||null,purchaseDetails,unitPrice:firstUnitPrice,priceMode:firstMode};
+ if(found){
+   itemPatch.productId=found.id;
+   await update(ref(db,`products/${current.storeId}/${found.id}`),{photo:shoppingPendingPhoto||null});
+ }
+ await update(ref(db,"items/"+id),itemPatch);
+ closeShoppingItemModal();
+}catch(err){
+console.error(err);
+alert("保存に失敗しました。");
+}
+};
+
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+
+onValue(storesRef,s=>{stores=s.val()||{};renderSelectors();renderStoreManage();renderFilters()});
+onValue(productsRef,s=>{products=s.val()||{};renderProducts()});
+let masterMigrationDone=false;
+async function migrateShoppingPricePhotoMasters(){
+ if(masterMigrationDone)return;
+ masterMigrationDone=true;
+ for(const [,x] of vals(items)){
+   const found=findProductByItem(x);
+   if(!found)continue;
+   const patch={};
+   if(x.photo && !found.p.photo)patch.photo=x.photo;
+   if(x.price!==undefined && found.p.price===undefined)patch.price=Number(x.price)||0;
+   if(Object.keys(patch).length)await update(ref(db,`products/${x.storeId}/${found.id}`),patch);
+ }
+}
+onValue(itemsRef,s=>{items=s.val()||{};renderList();renderFilters();updateShoppingBadge();renderShoppingTotals();migrateShoppingPricePhotoMasters()});
+function updateShoppingBadge(){
+ const remaining=vals(items).filter(([,x])=>!x.done).length;
+ $("tabShopping").innerHTML=`🛒 買い物${remaining?` <span class="count">${remaining}</span>`:""}`;
+}
+$("itemQty").innerHTML=Array.from({length:20},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join("");
+$("storeSelect").onchange=()=>{ $("productSearch").value=""; filter=$("storeSelect").value||"ALL"; renderProducts(); renderList(); renderFilters(); updateShoppingAddView(); };
+$("regStore").onchange=renderProductManage;
+$("productSearch").oninput=renderProducts;
+$("productSearch").onkeyup=renderProducts;
+$("productSearch").addEventListener("compositionend",renderProducts);
+$("productSearch").addEventListener("change",renderProducts);
+document.addEventListener("click",e=>{
+ const box=$("productSuggestions"), input=$("productSearch");
+ if(box && input && !box.contains(e.target) && e.target!==input) box.style.display="none";
+});
+
+$("addStore").onclick=async()=>{const name=$("newStore").value.trim();if(!name)return;await push(storesRef,{name});$("newStore").value=""};
+$("addProduct").onclick=async()=>{
+ const sid=$("regStore").value,name=$("newProduct").value.trim(),kana=$("newProductKana").value.trim();
+ const rawPrice=$("newProductPrice").value.trim();
+ const price=rawPrice===""?0:Math.max(0,Number(rawPrice)||0);
+ if(!sid||!name)return;
+ let photo=null;
+ const file=$("newProductPhoto").files?.[0];
+ if(file){try{photo=await resizeShoppingPhoto(file);}catch(err){console.error(err);return alert("写真の読み込みに失敗しました。");}}
+ const priceMode=$("newProductPriceMode").value||"pack"; await push(ref(db,"products/"+sid),{name,kana,price,priceMode,photo});
+ $("newProduct").value="";$("newProductKana").value="";$("newProductPrice").value="";$("newProductPriceMode").value="pack";$("newProductPhoto").value="";
+ $("newProductPhotoPreview").hidden=true;
+};
+$("newProductPhoto").addEventListener("change",async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{const src=await resizeShoppingPhoto(file);$("newProductPhotoImg").src=src;$("newProductPhotoPreview").hidden=false;}
+ catch(err){console.error(err);alert("写真の読み込みに失敗しました。");}
+});
+$("addItem").onclick=async()=>{
+ const sid=$("storeSelect").value;if(!sid)return alert("買う場所を選んでください");
+ const free=$("freeProduct").value.trim(), pid=$("productSelect").value;
+ const product=pid?products[sid]?.[pid]:null;
+ const name=free||(product?.name||"");if(!name)return alert("商品を選ぶか入力してください");
+ const qty=Math.max(1,Number($("itemQty").value)||1);
+ const itemData={storeId:sid,storeName:stores[sid]?.name||"",name,memo:$("memo").value.trim(),quantity:qty,done:false,createdAt:Date.now()};
+ if(product){
+   itemData.productId=pid;
+   const masterPrice=Number(product.price||0);
+   const masterMode=product.priceMode||"pack";
+   itemData.unitPrice=masterPrice;
+   itemData.priceMode=masterMode;
+   itemData.price=masterMode==="pack" ? Math.round(masterPrice*qty) : 0;
+   if(product.photo)itemData.photo=product.photo;
+ }
+ await push(itemsRef,itemData);
+ $("freeProduct").value="";$("memo").value="";$("productSelect").value="";$("itemQty").value="1";
+};
+$("deleteDone").onclick=async()=>{if(!confirm("購入済みを削除しますか？"))return;for(const [id,x] of vals(items))if(x.done)await remove(ref(db,"items/"+id))};
+$("uncheckAll").onclick=async()=>{for(const [id,x] of vals(items))if(x.done)await update(ref(db,"items/"+id),{done:false})};
+
+
+</script>
+</body>
+</html>
