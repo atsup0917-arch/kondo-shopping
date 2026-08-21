@@ -198,13 +198,15 @@ input, select, textarea, button {
   .manage button{padding:8px 7px!important;font-size:14px}
   .needEdit{min-width:0}
 }
-\n</style>\n<style>
+</style>
+<style>
 
 .productRegPhotoPreview{margin:8px 0;text-align:center}.productRegPhotoPreview img{width:120px;height:90px;object-fit:cover;border-radius:10px;border:1px solid #ddd}
 .productManagePhoto{display:flex;align-items:center;gap:6px;min-width:0}.productManagePhoto img{width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid #ddd;flex:0 0 48px}.productManagePhoto .noPhoto{width:48px;height:48px;border-radius:8px;background:#f3f3f3;display:flex;align-items:center;justify-content:center;font-size:12px;color:#777;flex:0 0 48px}
 .productManagePhoto input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.photoIconButton{display:inline-flex!important;align-items:center;justify-content:center;width:34px!important;height:34px!important;min-width:34px!important;padding:0!important;margin:0!important;background:#eef3ff!important;color:#2867df!important;border:1px solid #c9d7ff!important;border-radius:9px!important;font-size:17px!important;line-height:1!important;cursor:pointer}.photoDeleteButton{display:inline-flex!important;align-items:center;justify-content:center;width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;margin:0 0 0 3px!important;background:#fff0f0!important;color:#c62828!important;border:1px solid #f0bcbc!important;border-radius:8px!important;font-size:15px!important;line-height:1!important;cursor:pointer}.shoppingTapIcon{width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;margin:0!important;background:transparent!important;color:#2867df!important;border:0!important;border-radius:50%!important;font-size:17px!important;line-height:1!important;cursor:pointer}.itemProductLine{display:flex;align-items:center;gap:6px;min-width:0}.itemProductName{flex:1;min-width:0}.itemProductName b{overflow-wrap:anywhere}.productRegUpload{display:flex;align-items:center;gap:8px}.productRegUpload input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.productRegUploadLabel{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid #c9d7ff;border-radius:9px;background:#eef3ff;color:#2867df;font-size:18px;cursor:pointer}
 @media(max-width:520px){#productManage .productManageRow{grid-template-columns:1fr!important}.productManagePhoto{margin-top:2px}}
-\n</style>\n<style>
+</style>
+<style>
 
 /* =========================================================
    最終デザイン調整：見た目のみ変更
@@ -332,7 +334,8 @@ input,select,textarea{
   -webkit-text-fill-color:currentColor !important;
   text-shadow:none !important;
 }
-\n</style>\n<style>
+</style>
+<style>
 
 #shoppingPage .storeQuickAddButton{
   width:100%;margin:0 0 10px;padding:14px 16px;border:0;border-radius:14px;
@@ -340,7 +343,8 @@ input,select,textarea{
 }
 #shoppingPage .storeQuickAddButton:active{transform:scale(.99)}
 #shoppingPage .selectedStoreHint{color:#2f6fe4}
-\n</style>\n<style>
+</style>
+<style>
 
 /* 背景だけを薄く色付け。既存の機能・デザイン・JavaScriptは変更しない */
 html{
@@ -350,7 +354,611 @@ body{
   background:
     linear-gradient(180deg,#eef4f9 0%,#e9f0f6 100%) !important;
 }
-\n</style>\n
+</style>
+
+
+<style id="shopping-sheet-target-design">
+/* =========================================================
+   買い物シート：参考画像に合わせた見た目調整
+   ※買い物シートの表示だけを変更。Firebase/JSの動作は変更しない。
+   ========================================================= */
+html,body{
+  background:#eef4f9 !important;
+}
+body{
+  padding:18px 14px 50px !important;
+  color:#172033 !important;
+}
+.wrap{
+  max-width:760px !important;
+}
+#shoppingPage h1{
+  font-size:46px !important;
+  line-height:1.15 !important;
+  font-weight:900 !important;
+  letter-spacing:-1px !important;
+  margin:8px 4px 28px !important;
+  color:#172033 !important;
+}
+#shoppingPage > .card{
+  border-radius:28px !important;
+  border:1px solid #e1e7ef !important;
+  box-shadow:0 4px 16px rgba(30,55,90,.07) !important;
+}
+#shoppingPage > .card:first-of-type{
+  padding:25px 25px 28px !important;
+  margin-bottom:20px !important;
+}
+#shoppingPage > .card:first-of-type h2{
+  font-size:30px !important;
+  line-height:1.2 !important;
+  font-weight:900 !important;
+  margin:0 0 26px !important;
+}
+#shoppingPage #filters{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:center !important;
+  gap:10px 10px !important;
+  padding:0 !important;
+}
+#shoppingPage #filters button{
+  width:auto !important;
+  flex:0 0 auto !important;
+  min-height:48px !important;
+  padding:10px 22px !important;
+  margin:0 !important;
+  border-radius:18px !important;
+  font-size:22px !important;
+  line-height:1.15 !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+  box-shadow:0 2px 7px rgba(30,55,90,.07) !important;
+}
+#shoppingPage #filters button.has-items{
+  background:#fff8df !important;
+  color:#805b00 !important;
+  border:2px solid #dcae32 !important;
+}
+#shoppingPage #filters button.has-items.active{
+  background:#d6a82b !important;
+  color:#fff !important;
+  border-color:#b98b16 !important;
+  box-shadow:0 5px 13px rgba(185,139,22,.28) !important;
+}
+#shoppingPage #filters button:not(.has-items).active{
+  background:#2f6fe4 !important;
+  color:#fff !important;
+  border-color:#2f6fe4 !important;
+}
+#shoppingPage #filters .count{
+  font-size:inherit !important;
+  margin-left:5px !important;
+}
+#shoppingPage #list{
+  margin-top:0 !important;
+}
+#shoppingPage .storeGroup{
+  border-radius:24px !important;
+  margin:16px 0 !important;
+  box-shadow:0 3px 14px rgba(28,48,78,.06) !important;
+  border:1px solid #e5eaf1 !important;
+}
+#shoppingPage .storeTitle{
+  min-height:70px !important;
+  padding:18px 25px !important;
+  background:#eef3ff !important;
+  font-size:28px !important;
+  line-height:1.2 !important;
+  font-weight:900 !important;
+}
+#shoppingPage .storeTotal{
+  font-size:22px !important;
+  font-weight:900 !important;
+}
+#shoppingPage .storeGroup .item{
+  min-height:104px !important;
+  padding:18px 25px !important;
+  gap:14px !important;
+  background:#fff !important;
+}
+#shoppingPage .storeGroup .item input[type="checkbox"]{
+  width:28px !important;
+  height:28px !important;
+  flex:0 0 28px !important;
+  margin-right:12px !important;
+}
+#shoppingPage .itemText{
+  font-size:24px !important;
+  line-height:1.2 !important;
+}
+#shoppingPage .itemProductLine{
+  gap:8px !important;
+}
+#shoppingPage .itemProductName b{
+  font-size:24px !important;
+  font-weight:900 !important;
+}
+#shoppingPage .itemQuantity{
+  font-size:20px !important;
+  line-height:1.35 !important;
+  margin-top:7px !important;
+  font-weight:700 !important;
+}
+#shoppingPage .itemPrice{
+  font-size:18px !important;
+  margin-top:5px !important;
+}
+#shoppingPage .itemDelete{
+  min-width:74px !important;
+  padding:10px 13px !important;
+  border-radius:22px !important;
+  font-size:17px !important;
+  font-weight:800 !important;
+  background:#f1f1f1 !important;
+  color:#c62828 !important;
+}
+#shoppingPage .shoppingTapIcon{
+  width:34px !important;
+  height:34px !important;
+  min-width:34px !important;
+  font-size:20px !important;
+}
+#shoppingPage .empty{
+  border-radius:24px !important;
+  font-size:20px !important;
+  padding:24px !important;
+}
+#shoppingPage > .card.row{
+  border-radius:24px !important;
+  padding:18px !important;
+}
+#shoppingPage > .card.row button{
+  min-height:70px !important;
+  border-radius:20px !important;
+  font-size:20px !important;
+  margin:0 !important;
+}
+#shoppingPage #shoppingAddCard,
+#shoppingPage .settingsCard{
+  border-radius:24px !important;
+}
+@media(max-width:520px){
+  body{padding:14px 10px 40px !important}
+  #shoppingPage h1{
+    font-size:39px !important;
+    margin:8px 4px 22px !important;
+  }
+  #shoppingPage > .card:first-of-type{
+    padding:23px 18px 25px !important;
+  }
+  #shoppingPage > .card:first-of-type h2{
+    font-size:27px !important;
+    margin-bottom:22px !important;
+  }
+  #shoppingPage #filters{
+    gap:9px !important;
+  }
+  #shoppingPage #filters button{
+    font-size:19px !important;
+    min-height:46px !important;
+    padding:10px 18px !important;
+    border-radius:17px !important;
+  }
+  #shoppingPage .storeTitle{
+    min-height:64px !important;
+    padding:17px 20px !important;
+    font-size:25px !important;
+  }
+  #shoppingPage .storeTotal{
+    font-size:19px !important;
+  }
+  #shoppingPage .storeGroup .item{
+    min-height:94px !important;
+    padding:16px 18px !important;
+  }
+  #shoppingPage .itemText,
+  #shoppingPage .itemProductName b{
+    font-size:21px !important;
+  }
+  #shoppingPage .itemQuantity{
+    font-size:18px !important;
+  }
+  #shoppingPage .itemDelete{
+    min-width:66px !important;
+    font-size:15px !important;
+    padding:9px 10px !important;
+  }
+}
+</style>
+
+
+<style id="shopping-sheet-final-fix">
+/* 買い物シートのみ：参考画像に合わせた最終調整 */
+html,body{background:#edf3f8 !important;}
+body{color:#172033 !important;}
+#shoppingPage{background:transparent !important;}
+#shoppingPage h1{
+  color:#101a33 !important;
+  font-size:46px !important;
+  font-weight:900 !important;
+  letter-spacing:-1.5px !important;
+  margin:10px 4px 28px !important;
+}
+#shoppingPage > .card:first-of-type{
+  background:#fff !important;
+  border:1px solid #e2e7ee !important;
+  border-radius:30px !important;
+  box-shadow:0 4px 16px rgba(29,52,82,.07) !important;
+}
+#shoppingPage > .card:first-of-type h2{color:#101a33 !important;}
+#shoppingPage #filters button{
+  background:#fff !important;
+  color:#26344d !important;
+  border:2px solid #dfe5ed !important;
+}
+#shoppingPage #filters button.has-items{
+  background:#fff8df !important;
+  color:#805b00 !important;
+  border-color:#dcae32 !important;
+}
+#shoppingPage #filters button.has-items.active{
+  background:#d6a82b !important;
+  color:#fff !important;
+  border-color:#b98b16 !important;
+}
+#shoppingPage #filters button:not(.has-items).active{
+  background:#2f6fe4 !important;
+  color:#fff !important;
+  border-color:#2f6fe4 !important;
+}
+#shoppingPage > .card.row,
+#shoppingPage #shoppingAddCard{
+  background:#fff !important;
+  border:1px solid #e2e7ee !important;
+  border-radius:28px !important;
+  box-shadow:0 4px 16px rgba(29,52,82,.07) !important;
+}
+#shoppingPage > .card.row button.gray{
+  background:#e9eaed !important;
+  color:#2f6fe4 !important;
+}
+#shoppingPage input,#shoppingPage select,#shoppingPage textarea{
+  background:#fff !important;
+  color:#172033 !important;
+  border:2px solid #d6dbe3 !important;
+}
+@media(max-width:520px){
+  #shoppingPage h1{font-size:42px !important;margin:10px 4px 24px !important;}
+}
+</style>
+
+
+<style id="shopping-pink-theme">
+/* =========================================================
+   買い物シートのみ：ピンク系デザイン
+   Firebase・JavaScript・既存機能は変更しない
+   ========================================================= */
+
+html, body {
+  background: #fff1f6 !important;
+}
+
+body {
+  color: #171b2f !important;
+  padding: 14px 10px 40px !important;
+}
+
+#shoppingPage {
+  background: transparent !important;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* タイトル */
+#shoppingPage h1 {
+  color: #11172b !important;
+  font-size: 42px !important;
+  line-height: 1.15 !important;
+  font-weight: 900 !important;
+  letter-spacing: -1.5px !important;
+  margin: 10px 4px 24px !important;
+}
+
+/* 共通カード */
+#shoppingPage > .card,
+#shoppingPage #shoppingAddCard,
+#shoppingPage .settingsCard {
+  background: #fff !important;
+  border: 1px solid #f3dce5 !important;
+  border-radius: 28px !important;
+  box-shadow: 0 5px 18px rgba(190, 91, 125, .10) !important;
+}
+
+/* 表示する場所 */
+#shoppingPage > .card:first-of-type {
+  padding: 23px 18px 25px !important;
+  margin-bottom: 20px !important;
+}
+
+#shoppingPage > .card:first-of-type h2,
+#shoppingPage #shoppingAddTitle {
+  color: #171b2f !important;
+  font-size: 28px !important;
+  line-height: 1.2 !important;
+  font-weight: 900 !important;
+  margin: 0 0 22px !important;
+}
+
+/* 店舗フィルター */
+#shoppingPage #filters {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 9px !important;
+  padding: 0 !important;
+}
+
+#shoppingPage #filters button {
+  width: auto !important;
+  flex: 0 0 auto !important;
+  min-height: 46px !important;
+  padding: 10px 18px !important;
+  margin: 0 !important;
+  border-radius: 17px !important;
+  font-size: 19px !important;
+  line-height: 1.15 !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  color: #26304a !important;
+  background: #fff !important;
+  border: 2px solid #f0c4d4 !important;
+  box-shadow: 0 2px 7px rgba(190, 91, 125, .07) !important;
+}
+
+/* 未購入がある店舗 */
+#shoppingPage #filters button.has-items {
+  background: #fff6fa !important;
+  color: #c94876 !important;
+  border-color: #e98cad !important;
+}
+
+/* 選択中 */
+#shoppingPage #filters button:not(.has-items).active,
+#shoppingPage #filters button.has-items.active {
+  background: #e85b8a !important;
+  color: #fff !important;
+  border-color: #e85b8a !important;
+  box-shadow: 0 5px 13px rgba(232, 91, 138, .25) !important;
+}
+
+#shoppingPage #filters .count {
+  font-size: inherit !important;
+  margin-left: 5px !important;
+}
+
+/* 買い物一覧 */
+#shoppingPage .storeGroup {
+  background: #fff !important;
+  border: 1px solid #f3dce5 !important;
+  border-radius: 24px !important;
+  margin: 16px 0 !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 15px rgba(190, 91, 125, .08) !important;
+}
+
+#shoppingPage .storeTitle {
+  min-height: 64px !important;
+  padding: 17px 20px !important;
+  background: #fff0f6 !important;
+  color: #171b2f !important;
+  font-size: 25px !important;
+  line-height: 1.2 !important;
+  font-weight: 900 !important;
+}
+
+#shoppingPage .storeTotal {
+  color: #c94876 !important;
+  font-size: 19px !important;
+  font-weight: 900 !important;
+}
+
+#shoppingPage .storeGroup .item {
+  min-height: 94px !important;
+  padding: 16px 18px !important;
+  background: #fff !important;
+  border-top: 1px solid #f6e5eb !important;
+}
+
+#shoppingPage .storeGroup .item input[type="checkbox"] {
+  width: 28px !important;
+  height: 28px !important;
+  flex: 0 0 28px !important;
+  accent-color: #e85b8a !important;
+  margin-right: 12px !important;
+}
+
+#shoppingPage .itemText,
+#shoppingPage .itemProductName b {
+  color: #171b2f !important;
+  font-size: 21px !important;
+  font-weight: 900 !important;
+}
+
+#shoppingPage .itemQuantity {
+  color: #444 !important;
+  font-size: 18px !important;
+}
+
+#shoppingPage .itemPrice {
+  color: #c94876 !important;
+  font-size: 18px !important;
+}
+
+#shoppingPage .itemDelete {
+  min-width: 66px !important;
+  font-size: 15px !important;
+  padding: 9px 10px !important;
+  border-radius: 20px !important;
+  background: #fff1f5 !important;
+  color: #c94876 !important;
+}
+
+/* 空リスト */
+#shoppingPage .empty {
+  background: #fff !important;
+  border: 1px solid #f3dce5 !important;
+  border-radius: 24px !important;
+  color: #444 !important;
+  font-size: 20px !important;
+  padding: 24px !important;
+}
+
+/* 購入済み削除・全解除 */
+#shoppingPage > .card.row {
+  background: #fff !important;
+  padding: 18px !important;
+  border-radius: 28px !important;
+}
+
+#shoppingPage > .card.row button.gray {
+  min-height: 70px !important;
+  margin: 0 !important;
+  border-radius: 20px !important;
+  background: #fff0f6 !important;
+  color: #d34d7b !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  border: 1px solid #f2d0dc !important;
+}
+
+/* 買う物を追加 */
+#shoppingPage #shoppingAddCard {
+  padding: 20px !important;
+}
+
+#shoppingPage #shoppingAddTitle {
+  margin-bottom: 20px !important;
+}
+
+#shoppingPage #shoppingAddTitle::first-letter {
+  color: #e85b8a;
+}
+
+#shoppingPage label {
+  color: #171b2f !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+#shoppingPage input,
+#shoppingPage select,
+#shoppingPage textarea {
+  background: #fff !important;
+  color: #171b2f !important;
+  border: 2px solid #f0c4d4 !important;
+  border-radius: 18px !important;
+  box-shadow: none !important;
+}
+
+#shoppingPage input::placeholder {
+  color: #aaa !important;
+}
+
+#shoppingPage #addItem {
+  background: linear-gradient(135deg, #ef4f88, #e85b8a) !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-radius: 18px !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  min-height: 58px !important;
+  box-shadow: 0 5px 13px rgba(232, 91, 138, .25) !important;
+}
+
+/* 店舗を選んだ時の追加表示 */
+#shoppingPage .selectedStoreHint {
+  color: #d34d7b !important;
+}
+
+/* 店舗追加ボタン */
+#shoppingPage .storeQuickAddButton {
+  background: #fff0f6 !important;
+  color: #d34d7b !important;
+  border: 1px solid #f2d0dc !important;
+}
+
+/* 設定部分もピンク系で統一。ただし機能はそのまま */
+#shoppingPage .settingsCard summary {
+  color: #d34d7b !important;
+}
+
+#shoppingPage .settingsCard summary::after {
+  color: #d34d7b !important;
+}
+
+/* 商品編集モーダル */
+#shoppingPage .shoppingItemModalBox {
+  border: 1px solid #f3dce5 !important;
+  box-shadow: 0 10px 35px rgba(120, 40, 70, .20) !important;
+}
+
+#shoppingPage .shoppingModalClose {
+  background: #fff0f6 !important;
+  color: #c94876 !important;
+}
+
+@media (max-width:520px) {
+  #shoppingPage h1 {
+    font-size: 42px !important;
+    margin: 10px 4px 24px !important;
+  }
+
+  #shoppingPage > .card:first-of-type h2,
+  #shoppingPage #shoppingAddTitle {
+    font-size: 27px !important;
+  }
+
+  #shoppingPage #filters button {
+    font-size: 19px !important;
+    min-height: 46px !important;
+    padding: 10px 18px !important;
+  }
+}
+</style>
+
+
+<style id="shopping-filter-color-fix">
+/* 「表示する場所」だけ参考画像の色に変更 */
+#shoppingPage #filters button{
+  background:#ffffff !important;
+  color:#171b2f !important;
+  border:2px solid #d9dce2 !important;
+  box-shadow:0 2px 7px rgba(30,55,90,.05) !important;
+}
+
+/* 買い物がある場所：薄いクリーム＋オレンジ枠 */
+#shoppingPage #filters button.has-items{
+  background:#fff9db !important;
+  color:#76572f !important;
+  border:2px solid #e6b13d !important;
+  box-shadow:0 2px 7px rgba(230,177,61,.10) !important;
+}
+
+/* 選択中：「全部」などは参考画像のオレンジ */
+#shoppingPage #filters button.active,
+#shoppingPage #filters button.has-items.active{
+  background:#ecaf3a !important;
+  color:#ffffff !important;
+  border-color:#ecaf3a !important;
+  box-shadow:0 4px 12px rgba(236,175,58,.25) !important;
+}
+
+/* 数字 */
+#shoppingPage #filters .count{
+  color:inherit !important;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -504,7 +1112,7 @@ function renderStoreManage(){
  $("storeManage").innerHTML=vals(stores).sort((a,b)=>(a[1].name||"").localeCompare(b[1].name||"ja")).map(([id,s])=>`<div class="storeManage"><span>${esc(s.name)}</span><button class="danger" data-delstore="${id}">削除</button></div>`).join("");
  document.querySelectorAll("[data-delstore]").forEach(b=>b.onclick=async()=>{
    const id=b.dataset.delstore,name=stores[id]?.name||"";
-   if(confirm(`「${name}」を削除しますか？\\n登録商品も削除されます。\\n買い物リストの品は残ります。`)){
+   if(confirm(`「${name}」を削除しますか？\登録商品も削除されます。\買い物リストの品は残ります。`)){
      await remove(ref(db,"stores/"+id)); await remove(ref(db,"products/"+id));
    }
  });
