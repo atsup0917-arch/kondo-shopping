@@ -959,6 +959,125 @@ body {
 }
 </style>
 
+<style id="shopping-filters-mobile-scroll-layout">
+/* =========================================================
+   「表示する場所」の並び方だけを本体アプリ（index）と統一。
+   スマホ表示のみ：ボタンを3段（3行）にまとめて横スクロールできるようにする。
+   色・配色・Firebase連携は一切変更しない（レイアウト・サイズのみ）。
+   ========================================================= */
+@media(max-width:600px){
+#shoppingPage #filters{
+  display:grid !important;
+  grid-auto-flow:column !important;
+  grid-template-rows:repeat(3,minmax(0,auto)) !important;
+  grid-auto-columns:max-content !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  -webkit-overflow-scrolling:touch !important;
+  scroll-snap-type:x proximity !important;
+  padding-bottom:8px !important;
+  scrollbar-width:none !important;
+}
+#shoppingPage #filters::-webkit-scrollbar{display:none}
+#shoppingPage #filters button{
+  scroll-snap-align:start !important;
+  flex:0 0 auto !important;
+  min-height:auto !important;
+  font-size:14px !important;
+  padding:8px 10px !important;
+  white-space:nowrap !important;
+  overflow-wrap:normal !important;
+  word-break:normal !important;
+  min-width:64px !important;
+}
+#shoppingPage #filters button .count{font-size:12px !important}
+}
+</style>
+
+<style id="shopping-cute-plus-theme">
+/* =========================================================
+   もっと可愛く：今のピンク配色をベースに、丸み・ふわふわ影・
+   絵文字アクセント・かわいいフォントを追加。
+   Firebase連携・機能・レイアウトの骨組みは変更しない。
+   ========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap');
+
+#shoppingPage,
+#shoppingPage input,
+#shoppingPage select,
+#shoppingPage textarea,
+#shoppingPage button{
+  font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif !important;
+}
+
+/* ふんわり水玉背景 */
+body{
+  background:
+    radial-gradient(circle at 10% 6%,rgba(255,182,204,.30) 0,transparent 40%),
+    radial-gradient(circle at 92% 14%,rgba(255,214,224,.35) 0,transparent 38%),
+    radial-gradient(circle at 85% 90%,rgba(255,182,204,.28) 0,transparent 42%),
+    #fff1f6 !important;
+}
+
+/* タイトルにリボン */
+#shoppingPage h1::after{
+  content:" 🎀";
+  font-size:.6em;
+  vertical-align:middle;
+}
+
+/* 見出しに絵文字アクセント */
+#shoppingPage > .card:first-of-type h2::before{content:"🛍️ "}
+#shoppingPage #shoppingAddTitle::before{content:"📝 "}
+#shoppingPage .settingsBody h2::before{content:"🎈 "}
+#shoppingPage .storeTitle > span:first-child::before{content:"🧺 "}
+
+/* カード類をまるく、ふわっとした影に */
+#shoppingPage > .card,
+#shoppingPage #shoppingAddCard,
+#shoppingPage .settingsCard,
+#shoppingPage .storeGroup,
+#shoppingPage .empty,
+#shoppingPage .shoppingItemModalBox{
+  border-radius:30px !important;
+  box-shadow:0 10px 26px rgba(232,91,138,.16) !important;
+}
+
+/* ボタンをぷっくり丸く、押すとふわっと弾む */
+#shoppingPage button{
+  border-radius:20px !important;
+  transition:transform .12s ease,box-shadow .12s ease !important;
+}
+#shoppingPage button:active{
+  transform:scale(.95) !important;
+}
+#shoppingPage #filters button,
+#shoppingPage .itemDelete,
+#shoppingPage .purchaseQtyBtn,
+#shoppingPage .photoIconButton,
+#shoppingPage .photoDeleteButton{
+  border-radius:999px !important;
+}
+
+/* 入力欄も丸く */
+#shoppingPage input,
+#shoppingPage select,
+#shoppingPage textarea{
+  border-radius:18px !important;
+}
+
+/* チェックボックスをピンクの丸に */
+#shoppingPage input[type="checkbox"]{
+  accent-color:#ff6fa5 !important;
+  border-radius:999px !important;
+}
+
+/* 追加ボタンにキラキラ */
+#shoppingPage #addItem::after{content:" ✨"}
+#shoppingPage #addStore::after{content:" 🎀"}
+#shoppingPage #addProduct::after{content:" 🎀"}
+</style>
+
 </head>
 <body>
 <div class="wrap">
