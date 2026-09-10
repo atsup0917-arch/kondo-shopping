@@ -51,6 +51,9 @@ button.gray{background:#e9eaed;color:#2371df}.danger{background:#fff0f0;color:#c
 @media(max-width:520px){.orderRow{grid-template-columns:72px minmax(0,1fr) 92px}.preview{font-size:20px;padding:22px 16px}}
 .moveBtn{width:auto!important;margin:0!important;padding:9px 12px!important;background:#e9eaed!important;color:#2867df!important}.moveBtn:disabled{opacity:.3}.navtabs3{grid-template-columns:1fr 1fr 1fr}.navtabs3 button{font-size:15px;padding:12px 4px;min-width:0;white-space:normal;overflow-wrap:anywhere}
 .prepGroup{background:#fff;border-radius:20px;margin:14px 0;overflow:hidden}.prepTitle{font-size:22px;font-weight:800;padding:15px 18px;background:#eef3ff}.prepRow{display:grid;grid-template-columns:30px 1fr 82px;gap:10px;align-items:center;padding:14px;border-top:1px solid #eee}.prepRow input[type=checkbox]{width:27px;height:27px}.prepCount{padding:11px 5px!important;text-align:center}.manage{display:grid;grid-template-columns:1fr auto auto auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid #eee}.manage span{padding:10px;background:#f4f4f4;border-radius:12px}.manage button{width:auto;margin:0;padding:9px}.needEdit{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.needEdit input{padding:10px;font-size:16px}.prepDone{opacity:.48;background:#f5f5f5}.prepDone b{text-decoration:line-through}.prepQtyWrap{display:flex;align-items:center;gap:5px}.prepQtyUnit{font-size:15px;font-weight:700;white-space:nowrap}.prepQtyWrap .prepCount{min-width:58px}
+.productPickRow{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 10px}
+.productPickBtn{width:auto;margin:0;padding:11px 14px;background:#e9edf3;color:#2f6fe4;border-radius:10px;font-weight:700;font-size:15px}
+.productPickBtn:active{transform:scale(.98)}
 #printSheet{display:none}
 @media print{
  @page{size:A4 portrait;margin:9mm}
@@ -342,6 +345,7 @@ input,select,textarea{
   background:#e9edf3;color:#2f6fe4;font-weight:800;font-size:17px;
 }
 #shoppingPage .storeQuickAddButton:active{transform:scale(.99)}
+#shoppingPage .storeQuickRegisterButton{background:#eef4e8;color:#3f6b3f}
 #shoppingPage .selectedStoreHint{color:#2f6fe4}
 </style>
 <style>
@@ -1112,29 +1116,28 @@ body{
 <button class="gray" id="deleteDone">購入済みを削除</button>
 <button class="gray" id="uncheckAll">チェックを全て外す</button>
 </div>
-<div class="card" id="shoppingAddCard">
-<h2 id="shoppingAddTitle">買う物を追加</h2>
+<div class="card settingsCard" id="shoppingAddCard"><details><summary id="shoppingAddTitle">買う物を追加</summary><div class="settingsBody">
 <div class="small" id="selectedStoreHint" style="display:none;margin:-4px 0 10px;font-weight:800"></div>
 <div id="shoppingAddStorePicker"><label>買う場所</label><select id="storeSelect"></select></div>
-<label>商品</label><input autocomplete="off" id="productSearch" placeholder="商品名・ふりがなで検索"/>
-<div id="productSuggestions" style="display:none;background:#fff;border:1px solid #ccc;border-radius:10px;margin:-4px 0 8px;padding:4px;max-height:220px;overflow:auto"></div>
-<select id="productSelect"></select>
-<label>数量</label><select id="itemQty"></select>
+<label>商品（タップで追加）</label>
+<div id="productPickList" class="productPickRow"></div>
 <label>自由入力</label><input id="freeProduct" placeholder="商品リストにない物を入力"/>
 <label>メモ</label><input id="memo" placeholder="例：大サイズ / 特売"/>
 <button id="addItem">＋ 買う物に追加</button>
-</div>
-<div class="card settingsCard"><details><summary>⚙️ 買う場所・商品の登録・削除</summary><div class="settingsBody">
+</div></details></div>
+
+<div class="card settingsCard" id="productAddCard"><details><summary>➕ 商品の登録</summary><div class="settingsBody">
+<label>商品を登録する場所</label><select id="regStore"></select>
+<label>新しい商品</label><input id="newProduct" placeholder="例：玉子"/><label>価格の種類</label><select id="newProductPriceMode"><option value="pack">商品単価</option><option value="gram">g単価</option></select><label>価格</label><input id="newProductPrice" inputmode="decimal" min="0" placeholder="例：175" step="0.01" type="number"/><label>商品写真</label><div class="productRegUpload"><label aria-label="写真を選択" class="productRegUploadLabel" for="newProductPhoto" title="写真を選択">📷</label><input accept="image/*,.heic,.heif,.jpg,.jpeg,.png,.webp" id="newProductPhoto" type="file"/><span class="small" style="margin:0">写真を選択</span></div><div class="productRegPhotoPreview" hidden="" id="newProductPhotoPreview"><img alt="商品写真" id="newProductPhotoImg"/></div><div class="small">登録した価格・写真は、買い物リストにも自動反映されます。</div>
+<button id="addProduct">＋ 商品を登録</button><div id="productManage"></div>
+</div></details></div>
+
+<div class="card settingsCard"><details><summary>⚙️ 買う場所の登録・削除</summary><div class="settingsBody">
 <h2>買う場所の管理</h2>
 <label>新しい買う場所</label><input id="newStore" placeholder="例：魚屋"/>
 <button id="addStore">＋ 買う場所を追加</button><div id="storeManage"></div>
-<h2 class="settingsHeading">商品の管理</h2>
-<label>商品を登録する場所</label><select id="regStore"></select>
-<label>新しい商品</label><input id="newProduct" placeholder="例：玉子"/><label>ふりがな（検索用）</label><input id="newProductKana" placeholder="例：たまご"/><label>価格の種類</label><select id="newProductPriceMode"><option value="pack">商品単価</option><option value="gram">g単価</option></select><label>価格</label><input id="newProductPrice" inputmode="decimal" min="0" placeholder="例：175" step="0.01" type="number"/><label>商品写真</label><div class="productRegUpload"><label aria-label="写真を選択" class="productRegUploadLabel" for="newProductPhoto" title="写真を選択">📷</label><input accept="image/*,.heic,.heif,.jpg,.jpeg,.png,.webp" id="newProductPhoto" type="file"/><span class="small" style="margin:0">写真を選択</span></div><div class="productRegPhotoPreview" hidden="" id="newProductPhotoPreview"><img alt="商品写真" id="newProductPhotoImg"/></div><div class="small">登録した価格・写真は、買い物リストにも自動反映されます。</div>
-<button id="addProduct">＋ 商品を登録</button><div id="productManage"></div>
 <div class="small">買う場所を削除すると、その場所に登録した商品も削除します。すでに買い物リストへ追加した品は残ります。</div>
 </div></details></div>
-</div>
 <div class="shoppingItemModal" hidden="" id="shoppingItemModal">
 <div class="shoppingItemModalBox">
 <div class="shoppingItemModalHeader">
@@ -1212,40 +1215,36 @@ function normalizeProductSearch(s){
 }
 function renderProducts(){
  const sid=$("storeSelect").value;
- const q=normalizeProductSearch($("productSearch")?.value||"");
- const all=vals(products[sid]||{}).sort((a,b)=>(a[1].name||"").localeCompare(b[1].name||"ja"));
- const ps=q?all.filter(([,p])=>{
-   const name=normalizeProductSearch(p.name);
-   const kana=normalizeProductSearch(p.kana||p.furigana||p.reading||"");
-   return name.includes(q)||kana.includes(q);
- }):all;
+ // 既に買い物リストに入っている（未購入の）商品は、選択肢から外して二重選択を防ぐ。
+ const queuedProductIds=new Set(vals(items).filter(([,x])=>x.storeId===sid && !x.done && x.productId).map(([,x])=>x.productId));
+ const ps=vals(products[sid]||{}).filter(([id])=>!queuedProductIds.has(id)).sort((a,b)=>(a[1].name||"").localeCompare(b[1].name||"ja"));
 
- $("productSelect").innerHTML=`<option value="">${q ? "検索結果を選択" : "商品を選択"}</option>`+
-   ps.map(([id,p])=>`<option value="${id}">${esc(p.name)}</option>`).join("");
-
- const box=$("productSuggestions");
- if(box){
-   if(!q || !ps.length){
-     box.innerHTML="";
-     box.style.display="none";
-   }else{
-     box.innerHTML=ps.slice(0,12).map(([id,p])=>{
-       const kana=p.kana||p.furigana||p.reading||"";
-       return `<button type="button" data-suggest-id="${esc(id)}" style="display:block;width:100%;text-align:left;background:#fff;color:#222;border:0;border-bottom:1px solid #eee;padding:11px 10px;margin:0;font-size:16px">
-         <b>${esc(p.name)}</b>${kana?`<span style="font-size:13px;color:#777;margin-left:8px">${esc(kana)}</span>`:""}
-       </button>`;
-     }).join("");
-     box.style.display="block";
-     box.querySelectorAll("[data-suggest-id]").forEach(btn=>{
-       btn.onclick=()=>{
-         $("productSelect").value=btn.dataset.suggestId;
-         $("productSearch").value=btn.querySelector("b").textContent;
-         box.style.display="none";
-       };
-     });
-   }
+ const pickBox=$("productPickList");
+ if(pickBox){
+   pickBox.innerHTML=ps.length
+     ? ps.map(([id,p])=>`<button type="button" class="productPickBtn" data-product-pick="${esc(id)}">＋ ${esc(p.name)}</button>`).join("")
+     : `<div class="small" style="padding:4px 2px">商品がありません（下の設定から登録できます）</div>`;
+   pickBox.querySelectorAll("[data-product-pick]").forEach(btn=>{
+     btn.onclick=()=>addShoppingProductDirect(btn.dataset.productPick);
+   });
  }
  renderProductManage();
+}
+
+// タップした商品を、数量1・メモ欄の現在値で即座に買い物リストへ追加する。数量は追加後、リスト側で変更する。
+async function addShoppingProductDirect(pid){
+ const sid=$("storeSelect").value;if(!sid)return alert("買う場所を選んでください");
+ const product=products[sid]?.[pid];if(!product)return;
+ const qty=1;
+ const itemData={storeId:sid,storeName:stores[sid]?.name||"",name:product.name,memo:$("memo").value.trim(),quantity:qty,done:false,createdAt:Date.now(),productId:pid};
+ const masterPrice=Number(product.price||0);
+ const masterMode=product.priceMode||"pack";
+ itemData.unitPrice=masterPrice;
+ itemData.priceMode=masterMode;
+ itemData.price=masterMode==="pack" ? Math.round(masterPrice*qty) : 0;
+ if(product.photo)itemData.photo=product.photo;
+ await push(itemsRef,itemData);
+ $("memo").value="";
 }
 
 function renderStoreManage(){
@@ -1263,16 +1262,14 @@ function renderProductManage(){
  $("productManage").innerHTML=list.map(([id,p])=>{
    const photo=p.photo||"";
    const price=Number(p.price||0);
-   return `<div class="storeManage productManageRow" style="display:grid;grid-template-columns:1fr 1fr 110px 1.2fr auto;gap:6px;align-items:center;margin:10px 0">
+   return `<div class="storeManage productManageRow" style="display:grid;grid-template-columns:1fr 110px 1.2fr auto;gap:6px;align-items:center;margin:10px 0">
     <input type="text" value="${esc(p.name||"")}" data-pname="${id}" style="min-width:0;padding:9px;border:1px solid #ddd;border-radius:9px">
-    <input type="text" value="${esc(p.kana||"")}" placeholder="ふりがな" data-pkana="${id}" style="min-width:0;padding:9px;border:1px solid #ddd;border-radius:9px">
     <div><select data-pmode="${id}" style="width:100%;padding:9px;border:1px solid #ddd;border-radius:9px"><option value="pack" ${p.priceMode!=="gram"?"selected":""}>商品単価</option><option value="gram" ${p.priceMode==="gram"?"selected":""}>g単価</option></select><input type="number" min="0" step="0.01" inputmode="decimal" value="${price||""}" placeholder="価格" data-pprice="${id}" style="min-width:0;width:100%;padding:9px;border:1px solid #ddd;border-radius:9px;margin-top:4px"></div>
     <div class="productManagePhoto">${photo?`<img src="${esc(photo)}" alt="">`:`<div class="noPhoto">写真なし</div>`}<label class="photoIconButton" for="pphoto-${esc(id)}" title="写真を変更" aria-label="写真を変更">📷</label>${photo?`<button type="button" class="photoDeleteButton" data-delphoto="${esc(id)}" title="写真を削除" aria-label="写真を削除">🗑️</button>`:""}<input id="pphoto-${esc(id)}" type="file" accept="image/*,.heic,.heif,.jpg,.jpeg,.png,.webp" data-pphoto="${id}"></div>
     <button class="danger" data-delproduct="${id}">削除</button></div>`;
  }).join("");
  document.querySelectorAll("[data-delproduct]").forEach(b=>b.onclick=()=>remove(ref(db,`products/${sid}/${b.dataset.delproduct}`)));
  document.querySelectorAll("[data-pname]").forEach(i=>i.onchange=()=>{const v=i.value.trim();if(v)update(ref(db,`products/${sid}/${i.dataset.pname}`),{name:v})});
- document.querySelectorAll("[data-pkana]").forEach(i=>i.onchange=()=>update(ref(db,`products/${sid}/${i.dataset.pkana}`),{kana:i.value.trim()}));
  document.querySelectorAll("[data-pprice]").forEach(i=>i.onchange=()=>update(ref(db,`products/${sid}/${i.dataset.pprice}`),{price:Math.max(0,Number(i.value)||0)}));
 document.querySelectorAll("[data-pmode]").forEach(i=>i.onchange=()=>update(ref(db,`products/${sid}/${i.dataset.pmode}`),{priceMode:i.value}));
  document.querySelectorAll("[data-pphoto]").forEach(i=>i.onchange=async()=>{
@@ -1307,13 +1304,16 @@ function updateShoppingAddView(){
 function openShoppingStore(id){
  filter=id;
  if(stores[id])$("storeSelect").value=id;
- $("productSearch").value="";
  renderProducts();
  renderList();
  renderFilters();
  updateShoppingAddView();
  const card=$("shoppingAddCard");
- if(card)requestAnimationFrame(()=>card.scrollIntoView({behavior:"smooth",block:"start"}));
+ if(card){
+   const details=card.querySelector("details");
+   if(details)details.open=true;
+   requestAnimationFrame(()=>card.scrollIntoView({behavior:"smooth",block:"start"}));
+ }
 }
 function renderFilters(){
  const counts={};
@@ -1356,12 +1356,23 @@ function renderStoreQuickAddButton(){
  const list=$("list");
  if(!list)return;
  const old=$("storeQuickAddButton"); if(old)old.remove();
+ const oldReg=$("storeQuickRegisterButton"); if(oldReg)oldReg.remove();
  if(filter==="ALL"||!stores[filter])return;
  const btn=document.createElement("button");
  btn.type="button";btn.id="storeQuickAddButton";btn.className="storeQuickAddButton";
  btn.textContent=`＋ ${stores[filter].name} に買う物を追加`;
- btn.onclick=()=>{const card=$("shoppingAddCard");if(card)card.scrollIntoView({behavior:"smooth",block:"start"});};
+ btn.onclick=()=>{const card=$("shoppingAddCard");if(!card)return;const details=card.querySelector("details");if(details)details.open=true;card.scrollIntoView({behavior:"smooth",block:"start"});};
  list.parentNode.insertBefore(btn,list);
+ const regBtn=document.createElement("button");
+ regBtn.type="button";regBtn.id="storeQuickRegisterButton";regBtn.className="storeQuickAddButton storeQuickRegisterButton";
+ regBtn.textContent=`🏷️ ${stores[filter].name} の商品を登録`;
+ regBtn.onclick=()=>{
+   const card=$("productAddCard");if(!card)return;
+   const details=card.querySelector("details");if(details)details.open=true;
+   const reg=$("regStore");if(reg){reg.value=filter;renderProductManage();}
+   card.scrollIntoView({behavior:"smooth",block:"start"});
+ };
+ list.parentNode.insertBefore(regBtn,list);
 }
 
 
@@ -1590,35 +1601,38 @@ async function migrateShoppingPricePhotoMasters(){
    if(Object.keys(patch).length)await update(ref(db,`products/${x.storeId}/${found.id}`),patch);
  }
 }
-onValue(itemsRef,s=>{items=s.val()||{};renderList();renderFilters();updateShoppingBadge();renderShoppingTotals();migrateShoppingPricePhotoMasters()});
+onValue(itemsRef,s=>{items=s.val()||{};renderList();renderFilters();renderProducts();updateShoppingBadge();renderShoppingTotals();migrateShoppingPricePhotoMasters()});
 function updateShoppingBadge(){
  const remaining=vals(items).filter(([,x])=>!x.done).length;
- $("tabShopping").innerHTML=`🛒 買い物${remaining?` <span class="count">${remaining}</span>`:""}`;
+ const tab=$("tabShopping");
+ if(tab)tab.innerHTML=`🛒 買い物${remaining?` <span class="count">${remaining}</span>`:""}`;
 }
-$("itemQty").innerHTML=Array.from({length:20},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join("");
-$("storeSelect").onchange=()=>{ $("productSearch").value=""; filter=$("storeSelect").value||"ALL"; renderProducts(); renderList(); renderFilters(); updateShoppingAddView(); };
-$("regStore").onchange=renderProductManage;
-$("productSearch").oninput=renderProducts;
-$("productSearch").onkeyup=renderProducts;
-$("productSearch").addEventListener("compositionend",renderProducts);
-$("productSearch").addEventListener("change",renderProducts);
-document.addEventListener("click",e=>{
- const box=$("productSuggestions"), input=$("productSearch");
- if(box && input && !box.contains(e.target) && e.target!==input) box.style.display="none";
-});
-
+$("storeSelect").onchange=()=>{
+  const sid=$("storeSelect").value;
+  filter=sid||"ALL";
+  if(sid && stores[sid])$("regStore").value=sid;
+  renderProducts(); renderList(); renderFilters(); updateShoppingAddView(); renderProductManage();
+};
+$("regStore").onchange=()=>{
+  const sid=$("regStore").value;
+  if(sid && stores[sid])$("storeSelect").value=sid;
+  renderProductManage(); renderProducts();
+};
 $("addStore").onclick=async()=>{const name=$("newStore").value.trim();if(!name)return;await push(storesRef,{name});$("newStore").value=""};
 $("addProduct").onclick=async()=>{
- const sid=$("regStore").value,name=$("newProduct").value.trim(),kana=$("newProductKana").value.trim();
+ const sid=$("regStore").value,name=$("newProduct").value.trim();
  const rawPrice=$("newProductPrice").value.trim();
  const price=rawPrice===""?0:Math.max(0,Number(rawPrice)||0);
  if(!sid||!name)return;
  let photo=null;
  const file=$("newProductPhoto").files?.[0];
  if(file){try{photo=await resizeShoppingPhoto(file);}catch(err){console.error(err);return alert("写真の読み込みに失敗しました。");}}
- const priceMode=$("newProductPriceMode").value||"pack"; await push(ref(db,"products/"+sid),{name,kana,price,priceMode,photo});
- $("newProduct").value="";$("newProductKana").value="";$("newProductPrice").value="";$("newProductPriceMode").value="pack";$("newProductPhoto").value="";
+ const priceMode=$("newProductPriceMode").value||"pack"; await push(ref(db,"products/"+sid),{name,price,priceMode,photo});
+ $("newProduct").value="";$("newProductPrice").value="";$("newProductPriceMode").value="pack";$("newProductPhoto").value="";
  $("newProductPhotoPreview").hidden=true;
+ // 登録した場所を「買う物を追加」側にも反映し、タップ用の選択肢をすぐ更新する。
+ if(stores[sid])$("storeSelect").value=sid;
+ renderProducts();
 };
 $("newProductPhoto").addEventListener("change",async e=>{
  const file=e.target.files?.[0];if(!file)return;
@@ -1627,22 +1641,11 @@ $("newProductPhoto").addEventListener("change",async e=>{
 });
 $("addItem").onclick=async()=>{
  const sid=$("storeSelect").value;if(!sid)return alert("買う場所を選んでください");
- const free=$("freeProduct").value.trim(), pid=$("productSelect").value;
- const product=pid?products[sid]?.[pid]:null;
- const name=free||(product?.name||"");if(!name)return alert("商品を選ぶか入力してください");
- const qty=Math.max(1,Number($("itemQty").value)||1);
- const itemData={storeId:sid,storeName:stores[sid]?.name||"",name,memo:$("memo").value.trim(),quantity:qty,done:false,createdAt:Date.now()};
- if(product){
-   itemData.productId=pid;
-   const masterPrice=Number(product.price||0);
-   const masterMode=product.priceMode||"pack";
-   itemData.unitPrice=masterPrice;
-   itemData.priceMode=masterMode;
-   itemData.price=masterMode==="pack" ? Math.round(masterPrice*qty) : 0;
-   if(product.photo)itemData.photo=product.photo;
- }
+ const free=$("freeProduct").value.trim();
+ if(!free)return alert("商品名を入力するか、上の商品ボタンをタップしてください");
+ const itemData={storeId:sid,storeName:stores[sid]?.name||"",name:free,memo:$("memo").value.trim(),quantity:1,done:false,createdAt:Date.now()};
  await push(itemsRef,itemData);
- $("freeProduct").value="";$("memo").value="";$("productSelect").value="";$("itemQty").value="1";
+ $("freeProduct").value="";$("memo").value="";
 };
 $("deleteDone").onclick=async()=>{if(!confirm("購入済みを削除しますか？"))return;for(const [id,x] of vals(items))if(x.done)await remove(ref(db,"items/"+id))};
 $("uncheckAll").onclick=async()=>{for(const [id,x] of vals(items))if(x.done)await update(ref(db,"items/"+id),{done:false})};
