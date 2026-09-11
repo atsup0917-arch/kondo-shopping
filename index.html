@@ -112,6 +112,9 @@ button.gray{background:#e9eaed;color:#2371df}.danger{background:#fff0f0;color:#c
 .itemThumb{display:none!important}
 .itemPrice{margin-top:5px;font-size:16px;font-weight:800;color:#b45309}
 .itemQuantity{display:block!important;font-size:18px!important;line-height:1.4!important;margin-top:4px!important;font-weight:600!important;color:#333!important}
+.itemQtyWrap{display:flex;align-items:center;gap:8px;margin-top:6px}
+.itemQtyWrap .purchaseQtyBtn{width:34px!important;height:34px!important;font-size:18px!important}
+.itemQtyValue{min-width:28px;text-align:center;font-size:18px;font-weight:800;color:#333}
 .shoppingItemModal{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:12000;padding:18px;display:flex;align-items:center;justify-content:center}
 .shoppingItemModal[hidden]{display:none!important}
 .shoppingItemModalBox{width:min(520px,100%);max-height:calc(100dvh - 36px);overflow:auto;background:#fff;border-radius:22px;padding:18px}
@@ -1385,19 +1388,34 @@ const storeTotal=a.reduce((sum,x)=>sum+Number(x.price||0),0);
 return `<section class="storeGroup"><div class="storeTitle"><span>${esc(a[0].storeName||storeName(sid))}</span><span class="storeTotal">買物合計 ${yen(storeTotal)}</span></div>${a.map(x=>{
 const price=Number(x.price||0);
 const photo=x.photo||"";
-const purchaseQty=Array.isArray(x.purchaseDetails)&&x.purchaseDetails.length
+const hasPurchase=Array.isArray(x.purchaseDetails)&&x.purchaseDetails.length>0;
+const purchaseQty=hasPurchase
   ? x.purchaseDetails.reduce((sum,r)=>sum+Math.max(0,Number(r.qty)||0),0)
   : Math.max(0,Number(x.quantity)||0);
 const qtyText=purchaseQty>0 ? `数量 ${purchaseQty}` : (x.memo||"");
+// 買い物前(まだ購入内容が未記録)は、リスト上で数量をワンタップで増減できるようにする。
+// 購入済み(価格入力済み)は実際の購入内容から数量が決まるため、🔍から編集する。
+const planQty=Math.max(0,Number(x.quantity)||0);
+const qtyHtml=!hasPurchase
+  ? `<div class="itemQtyWrap"><button type="button" class="gray purchaseQtyBtn" data-itemqminus="${x.id}">−</button><span class="itemQtyValue">${planQty}</span><button type="button" class="purchaseQtyBtn" data-itemqplus="${x.id}">＋</button></div>`
+  : (qtyText?`<div class="small itemQuantity">${esc(qtyText)}</div>`:"");
 if(editingItemId===x.id){
 return `<div class="item"><input type="checkbox" ${x.done?"checked":""} data-check="${x.id}"><div class="itemText" style="display:block"><input type="text" value="${esc(x.name)}" data-editname="${x.id}" style="width:100%;margin-bottom:6px;padding:8px;border-radius:8px;border:1px solid #ccc;font-size:16px"><input type="text" value="${esc(x.memo||"")}" placeholder="数量・メモ" data-editmemo="${x.id}" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;font-size:16px"></div><button class="itemDelete" data-editsave="${x.id}" style="background:#3269df;color:#fff">保存</button></div>`;
 }
-return `<div class="item ${x.done?"done":""}"><input type="checkbox" ${x.done?"checked":""} data-check="${x.id}"><div class="itemText"><div class="itemProductLine"><span class="itemProductName"><b>${esc(x.name)}</b></span><button type="button" class="shoppingTapIcon" data-edit="${x.id}" title="写真・価格を登録・編集" aria-label="写真・価格を登録・編集">🔍</button></div>${qtyText?`<div class="small itemQuantity">${esc(qtyText)}</div>`:""}${price>0?`<div class="itemPrice">${yen(price)}</div>`:""}</div><button class="itemDelete" data-delitem="${x.id}">削除</button></div>`;
+return `<div class="item ${x.done?"done":""}"><input type="checkbox" ${x.done?"checked":""} data-check="${x.id}"><div class="itemText"><div class="itemProductLine"><span class="itemProductName"><b>${esc(x.name)}</b></span><button type="button" class="shoppingTapIcon" data-edit="${x.id}" title="写真・価格を登録・編集" aria-label="写真・価格を登録・編集">🔍</button></div>${qtyHtml}${price>0?`<div class="itemPrice">${yen(price)}</div>`:""}</div><button class="itemDelete" data-delitem="${x.id}">削除</button></div>`;
 }).join("")}</section>`;
 }).join("");
 document.querySelectorAll("[data-check]").forEach(c=>c.onchange=()=>update(ref(db,"items/"+c.dataset.check),{done:c.checked}));
 document.querySelectorAll("[data-delitem]").forEach(b=>b.onclick=()=>remove(ref(db,"items/"+b.dataset.delitem)));
 document.querySelectorAll("[data-edit]").forEach(d=>d.onclick=()=>openShoppingItemModal(d.dataset.edit));
+document.querySelectorAll("[data-itemqminus]").forEach(b=>b.onclick=()=>{
+const id=b.dataset.itemqminus,cur=Math.max(0,Number(items[id]?.quantity)||0);
+update(ref(db,"items/"+id),{quantity:Math.max(0,cur-1)});
+});
+document.querySelectorAll("[data-itemqplus]").forEach(b=>b.onclick=()=>{
+const id=b.dataset.itemqplus,cur=Math.max(0,Number(items[id]?.quantity)||0);
+update(ref(db,"items/"+id),{quantity:cur+1});
+});
 document.querySelectorAll("[data-editsave]").forEach(b=>b.onclick=async()=>{
 const id=b.dataset.editsave;
 const nameInput=document.querySelector(`[data-editname="${id}"]`),memoInput=document.querySelector(`[data-editmemo="${id}"]`);
