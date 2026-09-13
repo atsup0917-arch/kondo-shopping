@@ -1107,6 +1107,131 @@ body{
 #shoppingPage .storeGroup .item input[type="checkbox"]:checked::before{
   content:"❤️";
 }
+@keyframes shoppingHeartPop{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+#shoppingPage .storeGroup .item input[type="checkbox"]:checked::before{
+  animation:shoppingHeartPop .3s ease;
+}
+</style>
+
+<style id="shopping-sanrio-lovely-theme">
+/* =========================================================
+   サンリオ風・もっとラブリーに：パステルグラデーション、
+   お店ごとの色分け、キラキラ装飾を追加。
+   機能・レイアウトの骨組みは変更しない。
+   ========================================================= */
+
+/* タイトルをパステルグラデーション文字に */
+#shoppingPage h1{
+  display:inline-block;
+  background:linear-gradient(90deg,#ff8fc0,#c9a0f5) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  color:#ff6fa5 !important;
+}
+#shoppingPage h1::after{
+  -webkit-text-fill-color:#ff6fa5 !important;
+  color:#ff6fa5 !important;
+}
+
+/* カードにふんわりパステル枠 */
+#shoppingPage > .card,
+#shoppingPage #shoppingAddCard,
+#shoppingPage .settingsCard,
+#shoppingPage .empty{
+  border:2px dashed #ffd3e6 !important;
+}
+
+/* お店ごとにサンリオキャラ風のパステルカラーで色分け（4色ループ） */
+#shoppingPage .storeGroup{border:2px solid transparent !important}
+#shoppingPage .storeGroup:nth-of-type(4n+1){border-color:#ffd3e6 !important}
+#shoppingPage .storeGroup:nth-of-type(4n+2){border-color:#dfcbff !important}
+#shoppingPage .storeGroup:nth-of-type(4n+3){border-color:#bdf0e0 !important}
+#shoppingPage .storeGroup:nth-of-type(4n+4){border-color:#ffe9a8 !important}
+
+#shoppingPage .storeGroup:nth-of-type(4n+1) .storeTitle{background:linear-gradient(120deg,#ffe1ef,#ffb6d9) !important;color:#7a2955 !important}
+#shoppingPage .storeGroup:nth-of-type(4n+2) .storeTitle{background:linear-gradient(120deg,#ecdfff,#c9a0f5) !important;color:#4a2e73 !important}
+#shoppingPage .storeGroup:nth-of-type(4n+3) .storeTitle{background:linear-gradient(120deg,#d7f9ee,#9de3cd) !important;color:#1f5c49 !important}
+#shoppingPage .storeGroup:nth-of-type(4n+4) .storeTitle{background:linear-gradient(120deg,#fff3cf,#ffdd6b) !important;color:#7a5200 !important}
+
+#shoppingPage .storeGroup:nth-of-type(4n+1) .storeTitle>span:first-child::before{content:"🍓 " !important}
+#shoppingPage .storeGroup:nth-of-type(4n+2) .storeTitle>span:first-child::before{content:"🎀 " !important}
+#shoppingPage .storeGroup:nth-of-type(4n+3) .storeTitle>span:first-child::before{content:"🐰 " !important}
+#shoppingPage .storeGroup:nth-of-type(4n+4) .storeTitle>span:first-child::before{content:"🌸 " !important}
+
+/* 場所フィルターをパステルに */
+#shoppingPage .filters button{
+  background:#f5e9ff !important;
+  color:#7a5cae !important;
+  border:2px solid #e6d6ff !important;
+}
+#shoppingPage .filters button.active{
+  background:linear-gradient(120deg,#ff8fc0,#c9a0f5) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+}
+#shoppingPage .filters button.has-items{
+  background:#fff3cf !important;
+  color:#8a6300 !important;
+  border:2px solid #ffdd6b !important;
+}
+#shoppingPage .filters button.has-items.active{
+  background:linear-gradient(120deg,#ff8fc0,#c9a0f5) !important;
+  color:#fff !important;
+  border-color:transparent !important;
+}
+
+/* メインの操作ボタンをキャンディピンクに */
+#shoppingPage #addItem,
+#shoppingPage #addStore,
+#shoppingPage #addProduct,
+#shoppingPage #shoppingItemSave{
+  background:linear-gradient(135deg,#ff9dc8,#ff6fa5) !important;
+  color:#fff !important;
+  box-shadow:0 4px 12px rgba(255,111,165,.4) !important;
+}
+
+/* グレーボタンは淡いラベンダーに */
+#shoppingPage button.gray{
+  background:#f2ecff !important;
+  color:#7a5cae !important;
+}
+
+/* 商品タップ選択ボタンをパステルラベンダーに */
+#shoppingPage .productPickBtn{
+  background:#f2ecff !important;
+  color:#7a5cae !important;
+  border:2px solid #e6d6ff !important;
+}
+
+/* 削除系ボタンを淡いローズに */
+#shoppingPage .itemDelete,
+#shoppingPage .photoDeleteButton{
+  background:#ffe1ea !important;
+  color:#c23d6b !important;
+}
+
+/* 数量±・写真ボタンをパステルラベンダーの丸に */
+#shoppingPage .purchaseQtyBtn,
+#shoppingPage .photoIconButton{
+  background:#f2ecff !important;
+  color:#8a5cd8 !important;
+  border:1px solid #dcc9ff !important;
+}
+
+/* 入力欄フォーカスでふんわりピンクに光る */
+#shoppingPage input:focus,
+#shoppingPage select:focus,
+#shoppingPage textarea:focus{
+  outline:none !important;
+  border-color:#ff9dc8 !important;
+  box-shadow:0 0 0 4px rgba(255,157,200,.28) !important;
+}
+
+/* 設定カードの見出しをキュートな配色に */
+#shoppingPage .settingsCard summary{
+  color:#c9438a !important;
+}
 </style>
 </head>
 <body>
