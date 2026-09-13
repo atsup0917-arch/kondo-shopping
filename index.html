@@ -1018,12 +1018,21 @@ body {
   font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif !important;
 }
 
-/* ふんわりリボン＆お花の背景（Canvaで作成） */
+/* ふんわりリボン＆お花の背景（Canvaで作成）
+   background-attachment:fixed はiOS Safariで効かない/不安定なことがあるため、
+   position:fixedの疑似要素を背景専用レイヤーとして敷く方式にしてスマホでも
+   確実に背景が固定されるようにする。 */
 body{
+  background:transparent !important;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
   background:
     url("assets/bg-pattern.png") repeat top center / 400px auto,
-    #fdeef1 !important;
-  background-attachment:fixed !important;
+    #fdeef1;
 }
 
 /* タイトルにリボン */
