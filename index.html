@@ -1316,6 +1316,7 @@ document.body.addEventListener('touchstart', function(){}, {passive:true});
 
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {getDatabase,ref,onValue,push,remove,update} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import {getAuth,signInAnonymously,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 // ===== 新しいFirebase設定 =====
 // 新しいFirebaseプロジェクトを作成したら、この3項目だけ差し替えます。
@@ -1329,8 +1330,17 @@ const firebaseConfig = {
   messagingSenderId: "234082724756",
   appId: "1:234082724756:web:22f2a1fef8513fa0c7bd81"
 };
-const app=initializeApp(firebaseConfig), db=getDatabase(app);
+const app=initializeApp(firebaseConfig), db=getDatabase(app), fbAuth=getAuth(app);
 const storesRef=ref(db,"stores"), productsRef=ref(db,"products"), itemsRef=ref(db,"items");
+// データベースのセキュリティルールを「認証済みのみ許可」にしたため、
+// 匿名サインインが完了してからデータの購読を開始する。
+const fbReady=new Promise(resolve=>{
+  const unsub=onAuthStateChanged(fbAuth,user=>{if(user){unsub();resolve();}});
+});
+signInAnonymously(fbAuth).catch(e=>{
+  console.error('Firebase匿名認証に失敗しました。',e);
+  alert('データの読み込みに失敗しました。通信環境を確認してページを再読み込みしてください。');
+});
 
 let stores={},products={},items={},filter="ALL";
 const $=id=>document.getElementById(id);
@@ -1744,8 +1754,8 @@ alert("保存に失敗しました。");
 
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 
-onValue(storesRef,s=>{stores=s.val()||{};renderSelectors();renderStoreManage();renderFilters()});
-onValue(productsRef,s=>{products=s.val()||{};renderProducts()});
+fbReady.then(()=>onValue(storesRef,s=>{stores=s.val()||{};renderSelectors();renderStoreManage();renderFilters()}));
+fbReady.then(()=>onValue(productsRef,s=>{products=s.val()||{};renderProducts()}));
 let masterMigrationDone=false;
 async function migrateShoppingPricePhotoMasters(){
  if(masterMigrationDone)return;
@@ -1759,7 +1769,7 @@ async function migrateShoppingPricePhotoMasters(){
    if(Object.keys(patch).length)await update(ref(db,`products/${x.storeId}/${found.id}`),patch);
  }
 }
-onValue(itemsRef,s=>{items=s.val()||{};renderList();renderFilters();renderProducts();updateShoppingBadge();renderShoppingTotals();migrateShoppingPricePhotoMasters()});
+fbReady.then(()=>onValue(itemsRef,s=>{items=s.val()||{};renderList();renderFilters();renderProducts();updateShoppingBadge();renderShoppingTotals();migrateShoppingPricePhotoMasters()}));
 function updateShoppingBadge(){
  const remaining=vals(items).filter(([,x])=>!x.done).length;
  const tab=$("tabShopping");
